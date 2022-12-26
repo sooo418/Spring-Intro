@@ -302,7 +302,7 @@ public class HelloController {
 
 - [`http://localhost:8080/hello-api?name=spring`](http://localhost:8080/hello-api?name=spring)
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/55544f35-1f76-43ab-9cda-57807fcab03f/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221226%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221226T134120Z&X-Amz-Expires=86400&X-Amz-Signature=c7156ca3b8785aa2252fe57238d1fa1054dfe813d7e4f870a63cd608af2a5a13&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject~~~~)
+![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/55544f35-1f76-43ab-9cda-57807fcab03f/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221226%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221226T134120Z&X-Amz-Expires=86400&X-Amz-Signature=c7156ca3b8785aa2252fe57238d1fa1054dfe813d7e4f870a63cd608af2a5a13&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
 
 - `@ResponseBody`를 사용
   - HTTP의 BODY에 문자 내용을 직접 반환
