@@ -204,3 +204,115 @@ Hello
 *정적 컨텐츠 이미지*
 
 ![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/eeaec0b7-fab3-4a13-89c9-1130e713664c/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221225%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221225T115030Z&X-Amz-Expires=86400&X-Amz-Signature=b6ed570bc29670de193c67238b2882735ece2b5d8061394828e2e8b90841334d&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+# MVC와 템플릿 엔진
+
+- MVC: Model, View, Controller
+- 과거에는 View와 Controller가 분리되어 있지않고 View에서 모든걸 다 처리했다.
+  - `모델 1` 방식이라고 한다.
+- View는 화면에 관련된 일만 처리
+- Controller는 비즈니스 로직과 서버 뒷단에 관련된 일만 처리
+
+`HelloController`
+
+```java
+@Controller
+public class HelloController {
+    @GetMapping("hello-mvc")
+    public String helloMvc(@RequestParam("name") String name, Model model) {
+        model.addAttribute("name", name);
+        return "hello-template";
+    }
+}
+```
+
+`hello-template`
+
+```html
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<p th:text="'hello ' + ${name}">hello! empty</p>
+</body>
+</html>
+```
+
+*실행*
+
+- [`http://localhost:8080/hello-mvc?name=spring`](http://localhost:8080/hello-mvc?name=spring)
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/b1a6b59c-2e09-4c28-b8e2-c6ec77847b18/Untitled.png)
+
+- ${name}에 spring이 들어간걸 확인할 수 있다.
+
+# API
+
+`@ResponseBody 문자 반환`
+
+```java
+@Controller
+public class HelloController {
+	
+		@GetMapping("hello-string")
+    @ResponseBody
+    public String helloString(@RequestParam("name") String name) {
+        return "hello " + name; //"hello spring"
+    }
+}
+```
+
+- `@ResponseBody`를 사용하면 뷰 리졸버 (`viewResolver`)를 사용하지 않음
+- 대신에 HTTP의 BODY에 문자 내용을 직접 반화(HTML BODY TAG를 말하는 것이 아님)
+
+*실행*
+
+- [`http://localhost:8080/hello-string?name=spring`](http://localhost:8080/hello-string?name=spring)
+
+`@ResponseBody 객체 반환`
+
+```java
+@Controller
+public class HelloController {
+
+    @GetMapping("hello-api")
+    @ResponseBody
+    public Hello helloApi(@RequestParam("name") String name) {
+        Hello hello = new Hello();
+        hello.setName(name);
+        return hello;
+    }
+
+    static class Hello {
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+    }
+}
+```
+
+- `@ResponseBody`를 사용하고, 객체를 반환하면 객체가  JSON으로 변환됨
+- Getter와 Setter같은 `프로퍼티 접근방식`이라고도 불린다.
+
+*실행*
+
+- [`http://localhost:8080/hello-api?name=spring`](http://localhost:8080/hello-api?name=spring)
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/55544f35-1f76-43ab-9cda-57807fcab03f/Untitled.png)
+
+- `@ResponseBody`를 사용
+  - HTTP의 BODY에 문자 내용을 직접 반환
+  - `viewResolver`대신에 `httpMessageConverter`가 동작
+  - 기본 문자처리: `StringHttpMessageConverter`
+  - 기복 객체처리: `MappingJackson2HttpMessageConverter`
+  - byte 처리 등등 기타 여러  HttpMessageConverter가 기본으로 등록되어 있음
+
+> 참고: 클라이언트의 HTTP Accept 해더와 서버의 컨트롤러 반환 타입 정보 둘을 조합해서
+`HttpMessageConverter`가 선택된다.더 자세한 내용은 스프링 MVC강의에서 설명하겠다.
+>
+
+※클라이언의 HTTP Accept 해더: 클라이언트에서 서버에 요청시 Accept 값에 받고자 하는 형식을 입력해 해당 형식으로 받을 수 있다. ex) Ajax 또는 Axios에서 사용 가능
