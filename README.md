@@ -316,3 +316,384 @@ public class HelloController {
 >
 
 ※클라이언의 HTTP Accept 해더: 클라이언트에서 서버에 요청시 Accept 값에 받고자 하는 형식을 입력해 해당 형식으로 받을 수 있다. ex) Ajax 또는 Axios에서 사용 가능
+# 회원 도메인과 리포지토리 만들기
+
+*회원 객체*
+
+```java
+package hello.hellspring.domain;
+
+public class Member {
+
+    private Long id;
+    private String name;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+```
+
+*회원 리포지토리 인터페이스*
+
+```java
+package hello.hellspring.repository;
+
+import hello.hellspring.domain.Member;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface MemberRepository {
+    Member save(Member member);
+    Optional<Member> findById(Long id);
+    Optional<Member> findByName(String name);
+    List<Member> findAll();
+}
+```
+
+*회원 리포지토리 구현체*
+
+```java
+package hello.hellspring.repository;
+
+import hello.hellspring.domain.Member;
+
+import java.util.*;
+
+public class MemoryMemberRepository implements MemberRepository {
+
+    private static Map<Long, Member>  store = new HashMap<>();
+    private static Long sequence = 0L;
+
+    @Override
+    public Member save(Member member) {
+        member.setId(++sequence);
+        store.put(member.getId(), member);
+        return member;
+    }
+
+    @Override
+    public Optional<Member> findById(Long id) {
+        return Optional.ofNullable(store.get(id));
+    }
+
+    @Override
+    public Optional<Member> findByName(String name) {
+        return store.values().stream()
+                .filter(member -> member.getName().equals(name))
+                .findAny();
+    }
+
+    @Override
+    public List<Member> findAll() {
+        return new ArrayList<>(store.values());
+    }
+}
+```
+
+# 회원 리포지토리 테스트 케이스 작성
+
+개발한 기능을 실행해서 테스트 할 때 자바의 main메서드를 통해서 실행하거나, 웹 애플리케이션의 컨트롤러를 통해서 해당 기능을 실행한다. 이러한 방법은 준비하고 실행하는데 오래 걸리고, 반복 실행하기 어렵고 여러 테스트를 한번에 실행하기 어렵다는 단점이 있다. 자바는 JUnit이라는 프로임워크로 테스트를 실행해서 이러한 문제를 해결한다.
+
+*회원 리포지토리 메모리 구현체 테스트*
+
+`src/test/java`하위 폴더에 생성한다.
+
+```java
+package hello.hellspring.repository;
+
+import hello.hellspring.domain.Member;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+class MemoryMemberRepositoryTest {
+
+    MemoryMemberRepository repository = new MemoryMemberRepository();
+
+    @AfterEach
+    public void afterEach() {
+        repository.clearStore();
+    }
+
+    @Test
+    public void save() {
+        Member member = new Member();
+        member.setName("spring");
+
+        repository.save(member);
+
+        Member result = repository.findById(member.getId()).get();
+        assertThat(member).isEqualTo(result);
+    }
+
+    @Test
+    public void findByName() {
+        Member member1 = new Member();
+        member1.setName("spring1");
+        repository.save(member1);
+
+        Member member2 = new Member();
+        member2.setName("spring2");
+        repository.save(member2);
+
+        Member result = repository.findByName("spring1").get();
+
+        assertThat(result).isEqualTo(member1);
+    }
+
+    @Test
+    public void findAll() {
+        Member member1 = new Member();
+        member1.setName("spring1");
+        repository.save(member1);
+
+        Member member2 = new Member();
+        member2.setName("spring2");
+        repository.save(member2);
+
+        List<Member> result = repository.findAll();
+
+        assertThat(result.size()).isEqualTo(2);
+    }
+
+}
+```
+
+*클래스 명*
+
+```java
+class MemoryMemberRepositoryTest {
+}
+```
+
+*save1*
+
+```java
+@Test
+public void save() {
+    Member member = new Member();
+    member.setName("spring");
+    
+    repository.save(member);
+    
+    Member result = repository.findById(member.getId()).get();
+    Asserions.assertEquals(result, member);
+}
+```
+
+*실행*
+
+![실행을 하면 그냥 아무 출력된 로그없이 위와 같이 초록색으로 체크 모양이 표시됨.](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/690133d2-3853-4dfc-b973-d5c0155a11a8/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221227%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221227T115237Z&X-Amz-Expires=86400&X-Amz-Signature=67851e65215d6f08d99702857faddc225bedbd6322299960e27c2331a1506c21&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+
+실행을 하면 그냥 아무 출력된 로그없이 위와 같이 초록색으로 체크 모양이 표시됨.
+
+*실행 - 인자가 서로 다를 경우*
+
+![`Assertions.*assertEquals*(null, member);`
+실행시 X 모양이 표시가 되고 에러로그가 출력된다. 필요(expected) 값이 null이고 실제(actual)값이 member의 객체값이 표시된다.](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/6a5bdded-1b72-4f40-900c-2672f1251a28/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221227%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221227T115255Z&X-Amz-Expires=86400&X-Amz-Signature=22037100bda4ce985ce815badf6960839bdb02104749a0e99b2ec724297f33d3&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+
+`Assertions.*assertEquals*(null, member);`
+실행시 X 모양이 표시가 되고 에러로그가 출력된다. 필요(expected) 값이 null이고 실제(actual)값이 member의 객체값이 표시된다.
+
+*save2*
+
+```java
+import static org.assertj.core.api.Assertions.assertThat;
+
+@Test
+public void save() {
+    Member member = new Member();
+    member.setName("spring");
+
+    repository.save(member);
+
+    Member result = repository.findById(member.getId()).get();
+    assertThat(member).isEqualTo(result);
+}
+```
+
+*findByName*
+
+```java
+@Test
+public void findByName() {
+    Member member1 = new Member();
+    member1.setName("spring1");
+    repository.save(member1);
+
+    Member member2 = new Member();
+    member2.setName("spring2");
+    repository.save(member2);
+
+    Member result = repository.findByName("spring1").get();
+
+    assertThat(result).isEqualTo(member1);
+}
+```
+
+*실행*
+
+![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/6427e5b6-cb7d-4812-a374-0b62fdee1363/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221227%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221227T115314Z&X-Amz-Expires=86400&X-Amz-Signature=9a9b04e318e6fa83183fe25ecc0b497751acb0c0647e92d6c1e9fab4902c9c96&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+
+*실행 - 인자가 서로 다를 경우*
+
+![*`assertThat*(result).isEqualTo(member2);`
+필요값에 member1의 객체값이 표시,
+실제값에 member2의 객체값이 표시된다.](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/34a4f220-0dac-4758-8b1f-21dda3513644/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221227%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221227T115330Z&X-Amz-Expires=86400&X-Amz-Signature=929b8d788f979eefd3d900b82b4f36e5a82b23045c8733593a3361a37a45d2df&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+
+*`assertThat*(result).isEqualTo(member2);`
+필요값에 member1의 객체값이 표시,
+실제값에 member2의 객체값이 표시된다.
+
+*findAll*
+
+```java
+@Test
+public void findAll() {
+    Member member1 = new Member();
+    member1.setName("spring1");
+    repository.save(member1);
+
+    Member member2 = new Member();
+    member2.setName("spring2");
+    repository.save(member2);
+
+    List<Member> result = repository.findAll();
+
+    assertThat(result.size()).isEqualTo(2);
+}
+```
+
+*실행*
+
+![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/0f4e9ce1-2df1-4d31-9917-fddbf259f129/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221227%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221227T115354Z&X-Amz-Expires=86400&X-Amz-Signature=3bb0bb684c7d19adfe37cc88d6e9594feff4549f06bac7454941d3dac9f5ab4b&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+
+*실행 - 인자가 서로 다를 경우*
+
+![*`assertThat*(result.size()).isEqualTo(3);`
+위와 같이 필요값과 실제값이 표시된다.](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/e9459388-aa47-4f4a-9200-090b49a0ecb2/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221227%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221227T115406Z&X-Amz-Expires=86400&X-Amz-Signature=b75c7ed4efecc86ade8b54d9d33bc34a6599e10c69d0fdda42c2bcf7c067a323&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+
+*`assertThat*(result.size()).isEqualTo(3);`
+위와 같이 필요값과 실제값이 표시된다.
+
+*테스트 클래스를 한번에 실행*
+
+![빨갛게 표시된 부분을 클릭하면 정의되어 있는 테스트들이 한번에 모두 실행이 된다.](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/1963393e-6a9e-4c91-ab61-234ea6d739c6/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221227%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221227T115420Z&X-Amz-Expires=86400&X-Amz-Signature=feca427d371fb07f8319e2710c1a0ecf53ef6849665c2b1f31b3d772dd9f7a56&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+
+빨갛게 표시된 부분을 클릭하면 정의되어 있는 테스트들이 한번에 모두 실행이 된다.
+
+*현재 테스트 클래스 소스*
+
+```java
+package hello.hellspring.repository;
+
+import hello.hellspring.domain.Member;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+class MemoryMemberRepositoryTest {
+
+    MemberRepository repository = new MemoryMemberRepository();
+
+    @Test
+    public void save() {
+        Member member = new Member();
+        member.setName("spring");
+
+        repository.save(member);
+
+        Member result = repository.findById(member.getId()).get();
+        assertThat(member).isEqualTo(result);
+    }
+
+    @Test
+    public void findByName() {
+        Member member1 = new Member();
+        member1.setName("spring1");
+        repository.save(member1);
+
+        Member member2 = new Member();
+        member2.setName("spring2");
+        repository.save(member2);
+
+        Member result = repository.findByName("spring1").get();
+
+        assertThat(result).isEqualTo(member1);
+    }
+
+    @Test
+    public void findAll() {
+        Member member1 = new Member();
+        member1.setName("spring1");
+        repository.save(member1);
+
+        Member member2 = new Member();
+        member2.setName("spring2");
+        repository.save(member2);
+
+        List<Member> result = repository.findAll();
+
+        assertThat(result.size()).isEqualTo(2);
+    }
+
+}
+```
+
+*실행*
+
+![findAll()이 먼저 실행되고 findByName()이 실패한걸 확인 할 수 있다.
+테스트 소스를 한번에 실행 시 순서보장이 안되기 때문에 MemoryMemberRepository의 로컬변수 store에는 findAll() 함수에서 member 객체가 두 개 들어가고 findByName() 함수에서 또 name값이 같은 member 객체가 두 개가 들어가서 findByName에서 두 객체를 비교할때 result에 반환된 객체가 findAll() 함수에서 입력한 member객체이기에 실패하는 것을 확인할 수 있다.](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/f4a216c3-9912-4e9d-910c-99ec31ff37d2/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221227%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221227T115442Z&X-Amz-Expires=86400&X-Amz-Signature=223b9769682887e27ed45aad5c8e7bf70cc463b71f84433c4d4fc4a101982936&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+
+findAll()이 먼저 실행되고 findByName()이 실패한걸 확인 할 수 있다.
+테스트 소스를 한번에 실행 시 순서보장이 안되기 때문에 MemoryMemberRepository의 로컬변수 store에는 findAll() 함수에서 member 객체가 두 개 들어가고 findByName() 함수에서 또 name값이 같은 member 객체가 두 개가 들어가서 findByName에서 두 객체를 비교할때 result에 반환된 객체가 findAll() 함수에서 입력한 member객체이기에 실패하는 것을 확인할 수 있다.
+
+*해결방법*
+
+```java
+@AfterEach
+public void afterEach() {
+    repository.clearStore();
+}
+```
+
+*MemoryMemberRepository*
+
+```java
+public void clearStore() {
+    store.clear();
+}
+```
+
+*MemoryMemberRepositoryTest*
+
+`MemberRepository repository -> MemoryMemberRepository repository로 변경`
+
+*실행*
+
+![모두 정상적으로 실행되는걸 확인할 수 있다.](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/09a0a8aa-c2cb-4aac-a705-a1d83df87193/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221227%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221227T115454Z&X-Amz-Expires=86400&X-Amz-Signature=0b4e42e6f1a98c0185975dce22e58f0a4418a0314ab2919506a16ea6fff99cad&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+
+모두 정상적으로 실행되는걸 확인할 수 있다.
+
+### 테스트 주도 개발 (Test Driven Development의 약자 TDD)
+
+- 반복 테스트를 이용한 소프트웨어 방법~~~~론으로 작은 단위의 테스트 케이스를 작성하고 이를 통과하는 코드를 추가하는 단계를 반복하여 구현하는것을 말한다.
