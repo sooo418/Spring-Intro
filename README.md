@@ -47,6 +47,8 @@ tasks.named('test') {
 }
 ```
 
+dependencies에 포함된 라이브러리들은 repositories에 적힌 mavenCentral이란 사이트에서 다운로드를 받아라라고 설정을 해놓은 것이다. 필요하면 특정 사이트를 입력해서 다운받게 하면 된다.
+
 - HellSpringApplication
 
 ```java
@@ -64,6 +66,8 @@ public class HellSpringApplication {
 
 }
 ```
+
+java의 실행 메소드인 main메소드가 있고 안에 해당 파일의 클래스 와 인자를 파라미터에 담고 특정 메소드를 실행한다.~~~~
 
 해당 파일을 실행시키면 콘솔에
 
@@ -224,6 +228,7 @@ public class HelloController {
     }
 }
 ```
+※인텔리제이 팁 RequestParam에 커서를 넣고 ctrl + p 입력시 디폴트 값을 알 수 있다.
 
 `hello-template`
 
@@ -294,6 +299,8 @@ public class HelloController {
     }
 }
 ```
+
+※인텔리제이 팁 Getter 와 Setter 자동 생성키 중에 Win방식으로 alt + insert 키를 입력시 자동 생성이 가능한다.
 
 - `@ResponseBody`를 사용하고, 객체를 반환하면 객체가  JSON으로 변환됨
 - Getter와 Setter같은 `프로퍼티 접근방식`이라고도 불린다.
@@ -404,6 +411,12 @@ public class MemoryMemberRepository implements MemberRepository {
 }
 ```
 
+findByName 메소드에서 Lambda 방식을 사용
+Collection.values(): 해당 컬렉션의 value값들을 Collection을 반환
+Collection.stream(): Collection 형식을 Stream으로 반환
+Stream.filter(boolean): 인수로 받은 프리디케이트(boolean을 반환하는 함수)의 값에 의해 true를 만족하는 모든 요소를 Stream으로 반환
+Stream.findAny(): Stream에서 가장 먼저 탐색되는 요소를 반환
+
 # 회원 리포지토리 테스트 케이스 작성
 
 개발한 기능을 실행해서 테스트 할 때 자바의 main메서드를 통해서 실행하거나, 웹 애플리케이션의 컨트롤러를 통해서 해당 기능을 실행한다. 이러한 방법은 준비하고 실행하는데 오래 걸리고, 반복 실행하기 어렵고 여러 테스트를 한번에 실행하기 어렵다는 단점이 있다. 자바는 JUnit이라는 프로임워크로 테스트를 실행해서 이러한 문제를 해결한다.
@@ -483,6 +496,9 @@ class MemoryMemberRepositoryTest {
 }
 ```
 
+1. 평소 클래스와 다르게 앞에 public 이 빠져있는데 테스트 케이스이기에 굳이 public으로 안해줘도 된다.
+2. 테스트 하고자하는 클래스명에 뒤에 Test를 붙여 작성한다.
+
 *save1*
 
 ```java
@@ -497,6 +513,10 @@ public void save() {
     Asserions.assertEquals(result, member);
 }
 ```
+
+1. repository.findById 메소드의 반환값이 Optional이므로 get() 함수를 통해 Member를 반환받을 수 있다.
+2. 위와 같이 바로 get()으로 값을 받는 방법은 좋은 방법이 아니지만 테스트 코드이므로 바로 반환 받도록 작성하였다.
+3. Assertions.assertEquals(expected, actual); expected(기대값)과 actual(실제값)을 비교해주는 함수이다.
 
 *실행*
 
@@ -528,6 +548,10 @@ public void save() {
     assertThat(member).isEqualTo(result);
 }
 ```
+
+1. save1에서 사용한 Assertions는 JUnit에 내장되어 있는 클래스인데 요즘에는 assertj.core에 내장되어있는 Assertions가 사용하기 편해 많이 쓰는 추세입니다.
+2. Assertions.assertThat(member).isEqualTo(result);에서 Assertions에 커서를 놓고 alt + enter를 입력시 org.assertj.core.api.Assertions.assertThat를 import해서 그냥 assertThat을 사용가능하다.
+3. assertThat(actual).isEqualTo(expected); 똑같이 expected(기대값)과 actual(실제값)을 비교해주는 함수이다.
 
 *findByName*
 
@@ -662,19 +686,12 @@ class MemoryMemberRepositoryTest {
 *실행*
 
 ![findAll()이 먼저 실행되고 findByName()이 실패한걸 확인 할 수 있다.
-테스트 소스를 한번에 실행 시 순서보장이 안되기 때문에 MemoryMemberRepository의 로컬변수 store에는 findAll() 함수에서 member 객체가 두 개 들어가고 findByName() 함수에서 또 name값이 같은 member 객체가 두 개가 들어가서 findByName에서 두 객체를 비교할때 result에 반환된 객체가 findAll() 함수에서 입력한 member객체이기에 실패하는 것을 확인할 수 있다.](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/f4a216c3-9912-4e9d-910c-99ec31ff37d2/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221227%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221227T115442Z&X-Amz-Expires=86400&X-Amz-Signature=223b9769682887e27ed45aad5c8e7bf70cc463b71f84433c4d4fc4a101982936&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+테스트 소스를 한번에 실행 시 순서보장이 안되기 때문에 MemoryMemberRepository의 로컬변수 store에는 findAll() 함수에서 member 객체가 두 개 들어가고 findByName() 함수에서 또 name값이 같은 member 객체가 두 개가 들어가서 findByName에서 두 객체를 비교할때 result에 반환된 객체가 findAll() 함수에서 입력한 member객체이기에 실패하는 것을 확인할 수 있다.](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/f4a216c3-9912-4e9d-910c-99ec31ff37d2/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221228%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221228T142219Z&X-Amz-Expires=86400&X-Amz-Signature=d5e0caef418785aa3a5edcba2820f9eb2ceff0b559ade0f28783e7f82304bf4d&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
 
 findAll()이 먼저 실행되고 findByName()이 실패한걸 확인 할 수 있다.
 테스트 소스를 한번에 실행 시 순서보장이 안되기 때문에 MemoryMemberRepository의 로컬변수 store에는 findAll() 함수에서 member 객체가 두 개 들어가고 findByName() 함수에서 또 name값이 같은 member 객체가 두 개가 들어가서 findByName에서 두 객체를 비교할때 result에 반환된 객체가 findAll() 함수에서 입력한 member객체이기에 실패하는 것을 확인할 수 있다.
 
 *해결방법*
-
-```java
-@AfterEach
-public void afterEach() {
-    repository.clearStore();
-}
-```
 
 *MemoryMemberRepository*
 
@@ -683,10 +700,20 @@ public void clearStore() {
     store.clear();
 }
 ```
+MemoryMemberRepository 클래스에 해당 함수를 정의해준다.
+store.clear() → Collection에 값들을 비워준다.
 
 *MemoryMemberRepositoryTest*
 
 `MemberRepository repository -> MemoryMemberRepository repository로 변경`
+
+```java
+@AfterEach
+public void afterEach() {
+    repository.clearStore();
+}
+```
+@AfterEach는 테스트 메소드가 끝나고 호출되는 callback 메소드이다.
 
 *실행*
 
