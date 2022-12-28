@@ -787,7 +787,7 @@ public class MemberService {
 
 ```java
 public class MemberService {
-		...
+    ...
 }
 ```
 
@@ -1065,7 +1065,7 @@ class MemberServiceTest {
 
     MemberService memberService = new MemberService();
     MemoryMemberRepository memberRepository = new MemoryMemberRepository();
-		...
+    ...
 }
 ```
 
@@ -1075,7 +1075,7 @@ class MemberServiceTest {
 public class MemberService {
 
     private final MemberRepository memberRepository = new MemoryMemberRepository();
-		...
+    ...
 }
 ```
 
@@ -1091,7 +1091,7 @@ public class MemberService {
     public MemberService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
-		...
+    ...
 }
 ```
 
@@ -1110,7 +1110,7 @@ class MemberServiceTest {
         memberRepository = new MemoryMemberRepository();
         memberService = new MemberService(memberRepository);
     }
-		...
+    ...
 }
 ```
 
