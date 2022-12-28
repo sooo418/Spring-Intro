@@ -550,7 +550,7 @@ public void save() {
 ```
 
 1. save1에서 사용한 Assertions는 JUnit에 내장되어 있는 클래스인데 요즘에는 assertj.core에 내장되어있는 Assertions가 사용하기 편해 많이 쓰는 추세입니다.
-2. Assertions.assertThat(member).isEqualTo(result);에서 Assertions에 커서를 놓고 alt + enter를 입력시 org.assertj.core.api.Assertions.assertThat를 import해서 그냥 assertThat을 사용가능하다.
+2. ※인텔리제이 팁 Assertions.assertThat(member).isEqualTo(result);에서 Assertions에 커서를 놓고 alt + enter를 입력시 org.assertj.core.api.Assertions.assertThat를 import해서 그냥 assertThat을 사용가능하다.
 3. assertThat(actual).isEqualTo(expected); 똑같이 expected(기대값)과 actual(실제값)을 비교해주는 함수이다.
 
 *findByName*
@@ -582,7 +582,7 @@ public void findByName() {
 필요값에 member1의 객체값이 표시,
 실제값에 member2의 객체값이 표시된다.](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/34a4f220-0dac-4758-8b1f-21dda3513644/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221227%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221227T115330Z&X-Amz-Expires=86400&X-Amz-Signature=929b8d788f979eefd3d900b82b4f36e5a82b23045c8733593a3361a37a45d2df&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
 
-*`assertThat*(result).isEqualTo(member2);`
+`assertThat(result).isEqualTo(member2);`
 필요값에 member1의 객체값이 표시,
 실제값에 member2의 객체값이 표시된다.
 
@@ -614,7 +614,7 @@ public void findAll() {
 ![*`assertThat*(result.size()).isEqualTo(3);`
 위와 같이 필요값과 실제값이 표시된다.](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/e9459388-aa47-4f4a-9200-090b49a0ecb2/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221227%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221227T115406Z&X-Amz-Expires=86400&X-Amz-Signature=b75c7ed4efecc86ade8b54d9d33bc34a6599e10c69d0fdda42c2bcf7c067a323&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
 
-*`assertThat*(result.size()).isEqualTo(3);`
+`assertThat(result.size()).isEqualTo(3);`
 위와 같이 필요값과 실제값이 표시된다.
 
 *테스트 클래스를 한번에 실행*
@@ -724,3 +724,396 @@ public void afterEach() {
 ### 테스트 주도 개발 (Test Driven Development의 약자 TDD)
 
 - 반복 테스트를 이용한 소프트웨어 방법론으로 작은 단위의 테스트 케이스를 작성하고 이를 통과하는 코드를 추가하는 단계를 반복하여 구현하는것을 말한다.
+
+# 회원 서비스 개발
+
+*MemberService*
+
+```java
+package hello.hellspring.service;
+
+import hello.hellspring.domain.Member;
+import hello.hellspring.repository.MemberRepository;
+import hello.hellspring.repository.MemoryMemberRepository;
+
+import java.util.List;
+import java.util.Optional;
+
+public class MemberService {
+
+    private final MemberRepository memberRepository = new MemoryMemberRepository();
+
+		/**
+		     *회원 가입
+		*/
+		public Long join(Member member) {
+        //같은 이름이 있는 중복 회원X
+        validateDuplicateMember(member); //중복 회원 검증
+        memberRepository.save(member);
+        return member.getId();
+    }
+	
+    private void validateDuplicateMember(Member member) {
+        memberRepository.findByName(member.getName())
+                .ifPresent(m -> {
+                    throw new IllegalStateException("이미 존재하는 회원입니다.");
+                });
+    }
+
+		/**
+		     *전체 회원 조회
+		*/
+		public List<Member> findMembers() {
+		    return memberRepository.findAll();
+		}
+
+    public Optional<Member> findOne(Long memberId) {
+        return memberRepository.findById(memberId);
+    }
+}
+```
+
+※인텔리제이 팁 `ctrl + shift + alt + t`입력 시 리팩토링 기능 중 메소드 추출시 메소드를 따로 빼낼 수 있음.
+`ctrl + alt + v`입력 시 반환 변수가 자동으로 입력됨.
+
+- `ifPresent()` → 값이 있으면 동작 true를 반환
+  - 과거에는 `if ( result == null )` 이런식으로 코딩을 했지만 지금은 객체값이 null일 가능성이 있으면 `Optional`로 한번 감싸줘서 `ifPresent()` 메소드를 사용가능스
+- 서비스 클래스는 비즈니스에 가까운 용어를 사용해야한다. → 비즈니스에 의존적으로 설계를 해야함.
+- 리포지토리는 개발스럽게 용어를 사용하면 됨.
+
+# 회원 서비스 테스트
+
+*MemberService*
+
+```java
+public class MemberService {
+		...
+}
+```
+
+- `MemberService` 파일에서 클래스 명에 커서를 대고 `ctrl + shift + t`입력 후 ‘새 테스트 생성’ 버튼 클릭 시 자동으로 테스트 파일을 생성해준다.
+
+*MemberServiceTest*
+
+```java
+package hello.hellspring.service;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class MemberServiceTest {
+
+    @Test
+    void join() {
+    }
+
+    @Test
+    void findMembers() {
+    }
+
+    @Test
+    void findOne() {
+    }
+}
+```
+
+```java
+@Test
+void 회원가입() {
+}
+```
+
+테스트 코드는 빌드될때 실제 코드에 포함되지 않아서 테스트 코드는 한글로 메소드명을 작성해도 상관없다.
+
+*테스트 코드 작성*
+
+```java
+@Test
+void 회원가입() {
+    //given
+    Member member = new Member();
+    member.setName("hello");
+
+    //when
+    Long saveId = memberService.join(member);
+
+    //then
+    Member findMember = memberService.findOne(saveId).get();
+    assertThat(member.getName()).isEqualTo(findMember.getName());
+}
+```
+
+`given - when -then 패턴` 이라고 하며 준비 - 실행 - 검증 의 세 부분으로 나눈것이다.
+테스트가 작을 때 보다 클 때 이런 주석으로 구분을 지어놓으면 시각적으로 보는데 도움이 많이 된다.
+
+*테스트는 정상 플로우도 중요하지만 예외 플로우가 더 중요하다.*
+
+```java
+@Test
+public void 중복_회원_예외() {
+    //given
+    Member member1 = new Member();
+    member1.setName("spring");
+
+    Member member2 = new Member();
+    member2.setName("spring");
+
+    //when
+    memberService.join(member1);
+    assertThrows(IllegalStateException.class, () -> memberService.join(member2));
+
+    //then
+}
+```
+
+//when 에서 member1을 가입시키고 member2를 가입시킬때 두 객체의 name값이 같기 때문에 member2 객체를 회원가입 시킬 때 `MemberService`의 `IllegalStateException("이미 존재하는 회원입니다.")`해당 예외가 발생할 것이다.
+해당 예외를 `try catch`로 `Exception`의 내용을 확인해볼 수 있지만 더 좋은 문법을 제공을 해준다.
+
+- `assertThrows(IllegalStateException.class, () -> memberService.join(member2));`
+  - `() -> memberService.join(member)` 해당 로직을 실행시키면 예외가 발생하는데 `IllegalStateException.class` 해당 예외가 발생하는지 비교해주는 함수이다.
+
+실*행*
+
+![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/19751ddb-a715-417b-800a-c5986ec7f87b/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221228%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221228T160027Z&X-Amz-Expires=86400&X-Amz-Signature=3ffd76f620642a6b438b4f114a284fac6a14835b418c78ff73835feded15ed8c&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+
+- `assertThrows(NullPointerException.class, () -> memberService.join(member2));`으로 변경 시
+
+*실행*
+
+![테스트가 실패하는게 확인됨](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/fa3655ea-889b-46e1-851e-37c7a75eeff9/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221228%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221228T160042Z&X-Amz-Expires=86400&X-Amz-Signature=da353ec3d78c6daa16e1b84f2bedbb725e7e564ccfd5f11f5a28eac78231c2c7&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+
+테스트가 실패하는게 확인됨
+
+*`assertThrows()`함수를 사용하여 메시지를 검증하는 방법*
+
+```java
+@Test
+public void 중복_회원_예외() {
+    //given
+    Member member1 = new Member();
+    member1.setName("spring");
+
+    Member member2 = new Member();
+    member2.setName("spring");
+
+    //when
+    memberService.join(member1);
+    IllegalStateException e = assertThrows(IllegalStateException.class, () -> memberService.join(member2));
+
+    assertThat(e.getMessage()).isEqualTo("이미 존재하는 회원입니다.");
+
+    //then
+}
+```
+
+`assertThrows`의 반환값이 `Exception`이라 예외 객체를 받아 `assertThat`으로 비교가 가능하다.
+
+*MemberServiceTest*
+
+```java
+package hello.hellspring.service;
+
+import hello.hellspring.domain.Member;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+class MemberServiceTest {
+
+    MemberService memberService = new MemberService();
+
+    @Test
+    void 회원가입() {
+        //given
+        Member member = new Member();
+        member.setName("spring");
+
+        //when
+        Long saveId = memberService.join(member);
+
+        //then
+        Member findMember = memberService.findOne(saveId).get();
+        assertThat(member.getName()).isEqualTo(findMember.getName());
+    }
+
+    @Test
+    public void 중복_회원_예외() {
+        //given
+        Member member1 = new Member();
+        member1.setName("spring");
+
+        Member member2 = new Member();
+        member2.setName("spring");
+
+        //when
+        memberService.join(member1);
+        IllegalStateException e = assertThrows(IllegalStateException.class, () -> memberService.join(member2));
+
+        assertThat(e.getMessage()).isEqualTo("이미 존재하는 회원입니다.");
+/*
+        try {
+            memberService.join(member2);
+            fail();
+        } catch (IllegalStateException e) {
+            assertThat(e.getMessage()).isEqualTo("이미 존재하는 회원입니다.123123");
+        }
+*/
+
+        //then
+    }
+
+    @Test
+    void findMembers() {
+    }
+
+    @Test
+    void findOne() {
+    }
+}
+```
+
+*`회원가입`에서 함수에서 객체의 `name`을 hello → spring 으로 변경 후 전체 테스트 실행*
+
+![`중복_회원_예외()`함수에서 입력한 객체의 `name`값이 “spring”이므로 테스트 실행 중 예외가 발생한다.](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/d2f707ef-1657-4c1a-86fe-090fb7fb19a4/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221228%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221228T160203Z&X-Amz-Expires=86400&X-Amz-Signature=632cfa1ac5ba41f03818d0f15bc9f0c9d225a800ab5df1f6a612f51fc7c3ca2a&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+
+`중복_회원_예외()`함수에서 입력한 객체의 `name`값이 “spring”이므로 테스트 실행 중 예외가 발생한다.
+
+*해결방법*
+
+- `MemberRepositoryTest`에서 했던 방식과 같이 각각의 테스트 케이스 실행 후 값을 비워주는 함수를 실행해주도록 한다.
+  - `@AfterEach`사용
+
+*MemberServiceTest*
+
+```java
+package hello.hellspring.service;
+
+import hello.hellspring.domain.Member;
+import hello.hellspring.repository.MemoryMemberRepository;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+class MemberServiceTest {
+
+    MemberService memberService = new MemberService();
+    MemoryMemberRepository memberRepository = new MemoryMemberRepository();
+
+    @AfterEach
+    public void afterEach() {
+        memberRepository.clearStore();
+    }
+
+    @Test
+    void 회원가입() {
+        //given
+        Member member = new Member();
+        member.setName("spring");
+
+        //when
+        Long saveId = memberService.join(member);
+
+        //then
+        Member findMember = memberService.findOne(saveId).get();
+        assertThat(member.getName()).isEqualTo(findMember.getName());
+    }
+
+    @Test
+    public void 중복_회원_예외() {
+        //given
+        Member member1 = new Member();
+        member1.setName("spring");
+
+        Member member2 = new Member();
+        member2.setName("spring");
+
+        //when
+        memberService.join(member1);
+        IllegalStateException e = assertThrows(IllegalStateException.class, () -> memberService.join(member2));
+
+        assertThat(e.getMessage()).isEqualTo("이미 존재하는 회원입니다.");
+
+        //then
+    }
+
+    @Test
+    void findMembers() {
+    }
+
+    @Test
+    void findOne() {
+    }
+}
+```
+
+- ※인텔리제이 팁 `shift + F10` 입력 시 최근에 했던 테스트 케이스를 실행시켜준다.
+
+*실행*
+
+![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/9fefedb2-02c7-4b3e-8b21-81d0ae9d71e8/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221228%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221228T160229Z&X-Amz-Expires=86400&X-Amz-Signature=b689357bbaf40aae9ff8ad573404e3549bb9e1f0409cde5e0e33664882e7aca9&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+
+## DI(의존성 주입)
+
+*MemberServiceTest*
+
+```java
+class MemberServiceTest {
+
+    MemberService memberService = new MemberService();
+    MemoryMemberRepository memberRepository = new MemoryMemberRepository();
+		...
+}
+```
+
+*MemberService*
+
+```java
+public class MemberService {
+
+    private final MemberRepository memberRepository = new MemoryMemberRepository();
+		...
+}
+```
+
+- `MemberServiceTest`의 `MemoryMemberRepository` 객체와 `MemberService`의 `MemoryMemberRepository`객체는 서로 다른 객체기 때문에 문제가 발생할 수 있다.
+
+*MemberService*
+
+```java
+public class MemberService {
+
+    private final MemberRepository memberRepository;
+
+    public MemberService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
+		...
+}
+```
+
+`MemberRepository`를 인자로 받는 `MemberService`의 생성자를 만들어 객체를 직접 넣어준다.
+
+*MemberServiceTest*
+
+```java
+class MemberServiceTest {
+
+    MemberService memberService;
+    MemoryMemberRepository memberRepository;
+
+    @BeforeEach
+    public void beforeEach() {
+        memberRepository = new MemoryMemberRepository();
+        memberService = new MemberService(memberRepository);
+    }
+		...
+}
+```
+
+`@BeforeEach`를 사용하여 테스트를 동작하기 전에 객체를 생성해준다.
+이렇게 하면 `MemberServiceTest`의 `MemoryMemberRepository`객체와 `MemberService`의 `MemoryMemberRepository`는 같은 메모리상에 존재하는 객체가 된다.
+해당 방식이 DI이다.
