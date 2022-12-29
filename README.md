@@ -1251,8 +1251,7 @@ public class SpringConfig {
 ```java
 @Controller
 public class MemberController {
-
-		@Autowired
+    @Autowired
     private final MemberService memberService;
 
 }
@@ -1266,10 +1265,10 @@ public class MemberController {
 
     private final MemberService memberService;
 
-		@Autowired
-		public void setMemberService(MemberService memberService) {
-				this.memberService = memberService;
-		}
+    @Autowired
+    public void setMemberService(MemberService memberService) {
+        this.memberService = memberService;
+    }
 }
 ```
 
