@@ -1117,3 +1117,391 @@ class MemberServiceTest {
 `@BeforeEach`를 사용하여 테스트를 동작하기 전에 객체를 생성해준다.
 이렇게 하면 `MemberServiceTest`의 `MemoryMemberRepository`객체와 `MemberService`의 `MemoryMemberRepository`는 같은 메모리상에 존재하는 객체가 된다.
 해당 방식이 DI이다.
+
+# 스프링 빈과 의존관계
+
+## 스프링 빈을 등록하고, 의존관계 설정하기
+
+- 회원 컨트롤러가 회원서비스와 회원 리포지토리를 사용할 수 있게 의존관계를 준비하자
+
+*회원 컨트롤러에 의존관계 추가*
+
+```java
+package hello.hellspring.controller;
+
+import hello.hellspring.service.MemberService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+
+@Controller
+public class MemberController {
+
+    private final MemberService memberService;
+
+    @Autowired
+    public MemberController(MemberService memberService) {
+        this.memberService = memberService;
+    }
+}
+```
+
+- 스프링이 처음 실행될 때 스프링 컨테이너가 생성되는데 여기에 `@Controller` 어노테이션이 있는 해당 객체를 생성해서 저장하고 관리를 하게된다.
+- 생성자에 `@Autowired`가 있으면 스프링이 연관된 객체를 스프링 컨테이너에서 찾아서 넣어준다. 이렇게 객체 의존관계를 외부에서 넣어주는 것을 DI(Dependency Injection), 의존성 주입이라 한다.
+- 이전 테스트에서는 개발자가 직접 주입했고, 여기서는 `@Autowired`에 의해 스프링이 주입해준다.
+
+*오류 발생*
+
+```
+Consider defining a bean of type 'hello.hellspring.service.MemberService' in your configuration.
+```
+
+*memberService가 스프링 빈으로 등록되어 있지 않다.*
+
+![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/9ce4d3bd-b104-47de-bddd-c0dfd95e1580/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221229%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221229T131223Z&X-Amz-Expires=86400&X-Amz-Signature=38a102e4433dac5394439b086f47853eabb7662f408e14ed28c4852ae064f437&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+
+> 참고: MemberController는 스프링이 제공하는 컨트롤러여서 스프링 빈으로 자동 등록된다.
+`@Controller`가 있으면 자동 등록됨
+>
+
+## 스프링 빈을 등록하는 2가지 방법
+
+- 컴포넌트 스캔과 자동 의존관계 설정
+- 자바 코드로 직접 스프링 빈 등록하기
+
+### 컴포넌트 스캔과 자동 의존관계 설정
+
+- `@Component`애노테이션이 있으면 스프링 빈으로 자동 등록된다.
+- `@Controller`컨트롤러가 스프링 빈으로 자동 등록된 이유도 컴포넌트 스캔 때문이다.
+- `@Component`를 포함하는 다음 애노테이션도 스프링 빈으로 자동 등록된다.
+  - `@Controller`
+  - `@Service`
+  - `@Repository`
+
+*회원 서비스 스프링 빈 등록*
+
+```java
+@Service
+public class MemberService {
+
+    private final MemberRepository memberRepository;
+
+    @Autowired
+    public MemberService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
+
+}
+```
+
+> 참고: 생성자에 `@Autowired`를 사용하면 객체 생성 시점에 스프링 컨테이너에서 해당 스프링 빈을 찾아서 주입한다. 생성자가 1개만 있으면 `@Autowired`는 생략할 수 있다.
+>
+
+*회원 리포지토리 스프링 빈 등록*
+
+```java
+@Repository
+public class MemoryMemberRepository implements MemberRepository {}
+```
+
+*스프링 빈 등록 이미지*
+
+![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/dc57e374-5615-4d40-b715-637ddf38737f/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221229%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221229T131254Z&X-Amz-Expires=86400&X-Amz-Signature=7303391e4fc4a7132427e1a1e2f4e78afb8b4e3953a4119e0b17c6e7eaa6315d&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+
+- `MemberService`와 `MemberRepository`가 스프링 컨테이너에서 스프링 빈으로 등록되었다.
+
+> 참고: 스프링은 스프링 컨테이너에 스프링 빈을 등록할 때, 기본으로 싱글톤으로 등록한다.(유일하게 하나만 등록해서 공유한다) 따라서 같은 스프링 빈이면 모두 같은 인스턴스다. 설정으로 싱글톤이 아니게 설정할 수 있지만, 특별한 경우를 제외하면 대부분 싱글톤을 사용한다.
+>
+
+### 자바 코드로 직접 스프링 빈 등록하기
+
+- 회원 서비스와 회원 리포지토리의 `@Service`, `@Repository`, `@Autowired` 애노테이션을 제거하고 진행한다.
+
+```java
+package hello.hellspring;
+
+import hello.hellspring.repository.MemberRepository;
+import hello.hellspring.repository.MemoryMemberRepository;
+import hello.hellspring.service.MemberService;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class SpringConfig {
+
+    @Bean
+    public MemberService memberService() {
+        return new MemberService(memberRepository());
+    }
+
+    @Bean
+    public MemberRepository memberRepository() {
+        return new MemoryMemberRepository();
+    }
+}
+```
+
+> 참고: XML로 설정하는 방식도 있지만 최근에는 잘 사용하지 않으므로 생략한다.
+>
+
+> 참고: DI에는 필드 주입, setter 주입, 생성자 주입 이렇게 3가지 방법이 있다. 의존관계가 실행중에 동적으로 변하는 경우는 거의 없으므로 생성자 주입을 권장한다.
+>
+
+*필드 주입*
+
+```java
+@Controller
+public class MemberController {
+
+		@Autowired
+    private final MemberService memberService;
+
+}
+```
+
+*setter 주입*
+
+```java
+@Controller
+public class MemberController {
+
+    private final MemberService memberService;
+
+		@Autowired
+		public void setMemberService(MemberService memberService) {
+				this.memberService = memberService;
+		}
+}
+```
+
+*생성자 주입*
+
+```java
+@Controller
+public class MemberController {
+
+    private final MemberService memberService;
+
+    @Autowired
+    public MemberController(MemberService memberService) {
+        this.memberService = memberService;
+    }
+}
+```
+
+> 참고: 실무에서는 주로 정형화된 컨트롤러, 서비스, 리포지토리 같은 코드는 컴포넌트 스캔을 사용한다. 그리고 정형화되지 않거나, 상황에 따라 구현 클래스를 변경해야 하면 설정을 통해 스프링 빈으로 등록한다.
+>
+
+> 주의: `@Autowired`를 통한 DI는 `MemberController`, `MemberService`등과 같이 스프링이 관리하는 객체에서만 동작한다. 스프링 빈으로 등록하지 않고 내가 직접 생성한 객체에서는 동작하지않는다.
+>
+
+# 회원 관리 예제 - 웹 MVC 개발
+
+- 회원 웹 기능 - 홈 화면 추가
+- 회원 웹 기능 - 등록
+- 회원 웹 기능 - 조회
+
+## 회원 웹 기능 - 홈 화면 추가
+
+*홈 컨트롤러 추가*
+
+```java
+package hello.hellspring.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class HomeController {
+
+    @GetMapping("/")
+    public String home() {
+        return "home";
+    }
+}
+```
+
+*회원 관리용 홈*
+
+```html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div class="container">
+    <div>
+        <h1>Hello Spring</h1>
+        <p>회원 기능</p>
+        <p>
+            <a href="/members/new">회원 가입</a>
+            <a href="/members">회원 목록</a>
+        </p>
+    </div>
+</div><!-- /container -->
+
+</body>
+</html>
+```
+
+*실행*  [`http://localhost:8080/`](http://localhost:8080/)
+
+![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/4b76f86d-893d-4d79-9ab3-f0f077288fbf/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221229%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221229T131327Z&X-Amz-Expires=86400&X-Amz-Signature=3e063f31e5b20ba9aa5bddd00aacdeced0a08bb6e8c5a5f9c4448cf302cee658&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+
+- 이전에는 index.html이 존재하면 welcome 페이지라서 `localhost:8080`요청시 index.html 화면이 리턴된다고 한적이 있는데 home.html 화면이 리턴된 이유는 정적 컨텐츠(static)
+  즉, index.html화면은 관련 컨트롤러가 있는지 먼저 체크하고 없을 경우에 리턴이 된다.
+
+## 회원 웹 기능 - 등록
+
+### 회원 등록 폼 개발
+
+*회원 등록 폼 컨트롤러*
+
+```java
+package hello.hellspring.controller;
+
+import hello.hellspring.domain.Member;
+import hello.hellspring.service.MemberService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+
+@Controller
+public class MemberController {
+
+    private final MemberService memberService;
+
+    @Autowired
+    public MemberController(MemberService memberService) {
+        this.memberService = memberService;
+    }
+
+    @GetMapping("/members/new")
+    public String createForm() {
+        return "members/createMemberForm";
+    }
+
+    @PostMapping("/members/new")
+    public String create(MemberForm form) {
+        Member member = new Member();
+        member.setName(form.getName());
+
+        memberService.join(member);
+
+        return "redirect:/";
+    }
+}
+```
+
+*회원 등록 폼 HTML*
+
+```html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div class="container">
+
+    <form action="/members/new" method="post">
+        <div class="form-group">
+            <label for="name">이름</label>
+            <input type="text" id="name" name="name" placeholder="이름을 입력하세요">
+        </div>
+        <button type="submit">등록</button>
+    </form>
+</div><!-- /container -->
+
+</body>
+</html>
+```
+
+- `/members/new/`를 post방식으로 호출시 화면에서 받은 `<form>`태그 안에 있는`name`값을 스프링이 `MemberForm`의 `setName`을 사용하여 값을 세팅해준다.
+
+## 회원 웹 기능 - 조회
+
+*회원 컨트롤러에서 조회 기능*
+
+```java
+@GetMapping("/members")
+public String list(Model model) {
+    List<Member> members = memberService.findMembers();
+    model.addAttribute("members", members);
+    return "members/memberList";
+}
+```
+
+*회원 리스트 HTML*
+
+```html
+<!DOCTYPE html>
+<html xmlns:ht="http://www.thymelear.org">
+<body>
+
+<div class="container">
+    <div>
+        <table>
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>이름</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="member : ${members}">
+                <td th:text="${member.id}"></td>
+                <td th:text="${member.name}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div><!-- container -->
+</body>
+</html>
+```
+
+*실행*
+
+![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/c7a25a07-ccca-4d7a-8f54-f221f21bdd57/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221229%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221229T131350Z&X-Amz-Expires=86400&X-Amz-Signature=041181a5e38e9b166202b089d2f70e87faa691afb1b3bbfa125485be76a39a1a&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+
+- 회원 가입 화면에서 spring1과 spring2를 등록한다.
+
+![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/d1d16bb1-9e6b-4ae2-89d7-199cb8f93c24/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221229%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221229T131400Z&X-Amz-Expires=86400&X-Amz-Signature=bfd7535aa8fc9574a6f2d5f29d03cff7f467853786ab40b80f1206a41d88bde7&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+
+- 회원 목록 화면에서 등록 되어있는 회원이 표시된다.
+
+*페이지 소스*
+
+```html
+<!DOCTYPE html>
+<html xmlns:ht="http://www.thymelear.org">
+<body>
+
+<div class="container">
+    <div>
+        <table>
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>이름</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td>spring1</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>spring2</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div><!-- container -->
+</body>
+</html>
+```
+
+- `MemberController`에서 `memberService.findMembers()`메소드로 받은 Member 목록을 `members`라는 key값에 담았다.
+- `${members}`를 통해 Member 목록을 꺼낼 수 있게 된다.
+- `thymeleaf` 문법 중 `th:each : ${members}` 를 사용하여 해당 태그 안에 있는 html 태그를 반복하여 생성해준다.
+- `th:text="${member.id}"`와 `th:text="${member.name}"`을 통해 Member객체의 id와 name값을 화면에 표시할 수 있게 된다.

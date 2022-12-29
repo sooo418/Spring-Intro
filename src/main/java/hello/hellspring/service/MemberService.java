@@ -2,7 +2,8 @@ package hello.hellspring.service;
 
 import hello.hellspring.domain.Member;
 import hello.hellspring.repository.MemberRepository;
-import hello.hellspring.repository.MemoryMemberRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
