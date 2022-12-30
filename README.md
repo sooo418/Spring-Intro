@@ -147,7 +147,7 @@ Hello
     - [spring.io](http://spring.io) 스프링 참고 사이트
 
 - thymeleaf 템플릿 엔진
-    - - thymeleaf 공식 사이트 : http://www.thymeleaf.org/
+    - thymeleaf 공식 사이트 : http://www.thymeleaf.org/
     - 스프링 공식 튜토리얼 : https://spring.io/guides/gs/serving-web-content/
     - 스프링부트 메류얼 : https://docs.spring.io/spring-boot/docs/2.3.1.RELEASE/reference/html/spring-boot-features.html#boot-features-spring-mvc-template-engines
 
@@ -155,7 +155,7 @@ Hello
 
 ![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/998d1801-b49d-404f-a90f-7c9bc0215e28/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221225%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221225T114958Z&X-Amz-Expires=86400&X-Amz-Signature=5c8274ba87d267f26ba2e32cf78060e7651806955cefa3751a192e86bc05d55a&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
 
-- 컨트롤러에서 리턴 ㄱ밧으로 문자를 반환하면 뷰 리졸버(`viewResolver`)가 화면을 찾아서 처리한다.
+- 컨트롤러에서 리턴 값으로 문자를 반환하면 뷰 리졸버(`viewResolver`)가 화면을 찾아서 처리한다.
     - 스프링 부트 템플릿엔진 기본 viewName 매핑
     - `resoureces:templates/` + {ViewName} + `.html`
 
@@ -182,7 +182,7 @@ Hello
 ## 정적 컨텐츠
 
 - 스프링 부트 정적 컨텐츠 기능
-- [https://docs.spring.io/spring-boot/docs/2.3.1.RELEASE/reference/html/spring-boot-features.html#boot-features-spring-mvc-static](https://docs.spring.io/spring-boot/docs/2.3.1.RELEASE/reference/html/spring-boot-features.html#boot-features-spring-mvc-static)-content
+- [https://docs.spring.io/spring-boot/docs/2.3.1.RELEASE/reference/html/spring-boot-features.html#boot-features-spring-mvc-static-content](https://docs.spring.io/spring-boot/docs/2.3.1.RELEASE/reference/html/spring-boot-features.html#boot-features-spring-mvc-static-content)
 
 `resources/static/hello-static.html`
 
@@ -228,7 +228,7 @@ public class HelloController {
     }
 }
 ```
-※인텔리제이 팁 RequestParam에 커서를 넣고 ctrl + p 입력시 디폴트 값을 알 수 있다.
+※인텔리제이 팁 RequestParam에 커서를 넣고 `ctrl + p` 입력시 디폴트 값을 알 수 있다.
 
 `hello-template`
 
@@ -300,7 +300,7 @@ public class HelloController {
 }
 ```
 
-※인텔리제이 팁 Getter 와 Setter 자동 생성키 중에 Win방식으로 alt + insert 키를 입력시 자동 생성이 가능한다.
+※인텔리제이 팁 Getter 와 Setter 자동 생성키 중에 Win방식으로 `alt + insert` 키를 입력시 자동 생성이 가능한다.
 
 - `@ResponseBody`를 사용하고, 객체를 반환하면 객체가  JSON으로 변환됨
 - Getter와 Setter같은 `프로퍼티 접근방식`이라고도 불린다.
@@ -323,6 +323,36 @@ public class HelloController {
 >
 
 ※클라이언의 HTTP Accept 해더: 클라이언트에서 서버에 요청시 Accept 값에 받고자 하는 형식을 입력해 해당 형식으로 받을 수 있다. ex) Ajax 또는 Axios에서 사용 가능
+
+# 회원 관리 예제 - 백엔드 개발
+
+- 비즈니스 요구사항 정리
+- 회원 도메인과 리포지토리 만들기
+- 회원 리포지토리 테스트 케이스 작성
+- 회원 서비스 개발
+- 회원 서비스 테스트
+
+## 비즈니스 요구사항 정리
+
+- 데이터: 회원ID, 이름
+- 기능: 회원 등록, 조회
+- 아직 데이터 저장소가 선정되지 않음(가상의 시나리오)
+
+![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/30336b9c-ada7-474f-a7ba-858e0d4f54c5/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221230%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221230T151251Z&X-Amz-Expires=86400&X-Amz-Signature=0e68719cf9d338021f3ab43f46a48993d31d1cfb9444e3546d2f649ea177f1d4&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+
+- 컨트롤러: 웹 MVC의 컨트롤러 역할
+- 서비스: 핵심 비즈니스 로직 구현
+- 리포지토리: 데이터베이스에 접근, 도메인 객체를 DB에 저장하고 관리
+- 도메인: 비즈니스 도메인 객체, 예) 회원, 주문, 쿠폰 등등 주로 데이터베이스에 저장하고 관리됨
+
+*클래스 의존관계*
+
+![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/58ac57f2-ace1-4193-af5b-b87f3643153d/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221230%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221230T151301Z&X-Amz-Expires=86400&X-Amz-Signature=efd99da275f0c4d38e763c412e49fcaa84ffb2f0534a4c01c1bbcbbdefff2e8b&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+
+- 아직 데이터 저장소가 선정되지 않아서, 우선 인터페이스로 구현 클래스를 변경할 수 있도록 설계
+- 데이터 저장소는 RDB, NoSQL 등등 다양한 저장소를 고민중인 상황으로 가정
+- 개발을 진행하기 위해서 초기 개발 단계에서는 구현체로 가벼운 메모리 기반의 데이터 저장소 사용
+
 # 회원 도메인과 리포지토리 만들기
 
 *회원 객체*
@@ -411,11 +441,11 @@ public class MemoryMemberRepository implements MemberRepository {
 }
 ```
 
-findByName 메소드에서 Lambda 방식을 사용
-Collection.values(): 해당 컬렉션의 value값들을 Collection을 반환
-Collection.stream(): Collection 형식을 Stream으로 반환
-Stream.filter(boolean): 인수로 받은 프리디케이트(boolean을 반환하는 함수)의 값에 의해 true를 만족하는 모든 요소를 Stream으로 반환
-Stream.findAny(): Stream에서 가장 먼저 탐색되는 요소를 반환
+`findByName` 메소드에서 Lambda 방식을 사용
+`Collection.values()`: 해당 컬렉션의 value값들을 `Collection`을 반환
+`Collection.stream()`: `Collection` 객체를 `Stream`객체로 반환
+`Stream.filter(boolean)`: 인수로 받은 프리디케이트(boolean을 반환하는 함수)의 값에 의해 true를 만족하는 모든 요소를 `Stream`객체로 반환
+`Stream.findAny()`: `Stream`에서 가장 먼저 탐색되는 요소를 반환
 
 # 회원 리포지토리 테스트 케이스 작성
 
@@ -514,9 +544,9 @@ public void save() {
 }
 ```
 
-1. repository.findById 메소드의 반환값이 Optional이므로 get() 함수를 통해 Member를 반환받을 수 있다.
-2. 위와 같이 바로 get()으로 값을 받는 방법은 좋은 방법이 아니지만 테스트 코드이므로 바로 반환 받도록 작성하였다.
-3. Assertions.assertEquals(expected, actual); expected(기대값)과 actual(실제값)을 비교해주는 함수이다.
+1. `repository.findById` 메소드의 반환값이 `Optional`이므로 `get()` 함수를 통해 Member를 반환받을 수 있다.
+2. 위와 같이 바로 `get()`으로 값을 받는 방법은 좋은 방법이 아니지만 테스트 코드이므로 바로 반환 받도록 작성하였다.
+3. `Assertions.assertEquals(expected, actual);` expected(기대값)과 actual(실제값)을 비교해주는 함수이다.
 
 *실행*
 
@@ -529,7 +559,7 @@ public void save() {
 ![`Assertions.*assertEquals*(null, member);`
 실행시 X 모양이 표시가 되고 에러로그가 출력된다. 필요(expected) 값이 null이고 실제(actual)값이 member의 객체값이 표시된다.](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/6a5bdded-1b72-4f40-900c-2672f1251a28/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221227%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221227T115255Z&X-Amz-Expires=86400&X-Amz-Signature=22037100bda4ce985ce815badf6960839bdb02104749a0e99b2ec724297f33d3&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
 
-`Assertions.*assertEquals*(null, member);`
+`Assertions.assertEquals(null, member);`
 실행시 X 모양이 표시가 되고 에러로그가 출력된다. 필요(expected) 값이 null이고 실제(actual)값이 member의 객체값이 표시된다.
 
 *save2*
@@ -549,9 +579,9 @@ public void save() {
 }
 ```
 
-1. save1에서 사용한 Assertions는 JUnit에 내장되어 있는 클래스인데 요즘에는 assertj.core에 내장되어있는 Assertions가 사용하기 편해 많이 쓰는 추세입니다.
-2. ※인텔리제이 팁 Assertions.assertThat(member).isEqualTo(result);에서 Assertions에 커서를 놓고 alt + enter를 입력시 org.assertj.core.api.Assertions.assertThat를 import해서 그냥 assertThat을 사용가능하다.
-3. assertThat(actual).isEqualTo(expected); 똑같이 expected(기대값)과 actual(실제값)을 비교해주는 함수이다.
+1. save1에서 사용한 `Assertions`는 JUnit에 내장되어 있는 클래스인데 요즘에는 `assertj.core`에 내장되어있는 `Assertions`가 사용하기 편해 많이 쓰는 추세입니다.
+2. ※인텔리제이 팁 `Assertions.assertThat(member).isEqualTo(result);`에서 `Assertions`에 커서를 놓고 `alt + enter`를 입력시 `org.assertj.core.api.Assertions.assertThat`를 import해서 그냥 `assertThat`으로 사용가능하다.
+3. `assertThat(actual).isEqualTo(expected);` 똑같이 expected(기대값)과 actual(실제값)을 비교해주는 함수이다.
 
 *findByName*
 
@@ -701,7 +731,7 @@ public void clearStore() {
 }
 ```
 MemoryMemberRepository 클래스에 해당 함수를 정의해준다.
-store.clear() → Collection에 값들을 비워준다.
+`store.clear()` → Collection에 값들을 비워준다.
 
 *MemoryMemberRepositoryTest*
 
@@ -1256,6 +1286,8 @@ public class MemberController {
 
 }
 ```
+
+의존관계가 변경이 불가능하여 요즘에는 잘 사용안함
 
 *setter 주입*
 
