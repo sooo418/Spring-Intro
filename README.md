@@ -1836,3 +1836,409 @@ public class SpringConfig {
 ![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/ab2564a7-a4f2-43bb-83fc-2ee2b14b56a8/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221230%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221230T174548Z&X-Amz-Expires=86400&X-Amz-Signature=c01d54f618bb5f0b1ab840510631a46a8faf12474dd6da8b51c046c91b29a3f8&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
 
 회원목록 화면이랑 h2 콘솔에서 jpa가 저장된걸 확인할 수 있다.
+## 스프링 통합 테스트
+
+**회원 서비스 스프링 통합 테스트**
+
+```java
+package hello.hellspring.service;
+
+import hello.hellspring.domain.Member;
+import hello.hellspring.repository.MemberRepository;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+@SpringBootTest
+@Transactional
+class MemberServiceIntegrationTest {
+
+    @Autowired
+    MemberService memberService;
+    @Autowired
+    MemberRepository memberRepository;
+
+    @Test
+    void 회원가입() {
+        //given
+        Member member = new Member();
+        member.setName("spring");
+
+        //when
+        Long saveId = memberService.join(member);
+
+        //then
+        Member findMember = memberService.findOne(saveId).get();
+        assertThat(member.getName()).isEqualTo(findMember.getName());
+    }
+
+    @Test
+    public void 중복_회원_예외() {
+        //given
+        Member member1 = new Member();
+        member1.setName("spring");
+
+        Member member2 = new Member();
+        member2.setName("spring");
+
+        //when
+        memberService.join(member1);
+        IllegalStateException e = assertThrows(IllegalStateException.class, () -> memberService.join(member2));
+
+        assertThat(e.getMessage()).isEqualTo("이미 존재하는 회원입니다.");
+
+    }
+    
+}
+```
+
+- `@SpringBootTest:`스프링 컨테이너와 테스트를 함께 실행한다.
+- `@Transactional:`테스트 케이스에 이 애노테이션이 있으면, 테스트 시작전에 트랜잭션을 시작하고, 테스트 완료 후에 항상 롤백한다. 이렇게 하면 DB에 데이터가 남지않아 다음 테스트에 영향을 주지 않는다.
+
+## 스프링 JdbcTemplate
+
+- 순수 Jdbc와 동일한 환경설정을 하면 된다.
+- 스프링 JdbcTemplate과 MyBatis 같은 라이브러리는 JDBC
+
+**스프링 jdbcTemplate 회원 리포지토리**
+
+```java
+package hello.hellspring.repository;
+
+import hello.hellspring.domain.Member;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+
+import javax.sql.DataSource;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+public class JdbcTemplateMemberRepository implements MemberRepository {
+
+    private final JdbcTemplate jdbcTemplate;
+
+    // 생성자가 하나라서 @Autowired 생략이 가능하다.
+    public JdbcTemplateMemberRepository(DataSource dataSource) {
+        jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+
+    @Override
+    public Member save(Member member) {
+        SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
+        jdbcInsert.withTableName("member").usingGeneratedKeyColumns("id");
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("name", member.getName());
+        Number key = jdbcInsert.executeAndReturnKey(new
+                MapSqlParameterSource(parameters));
+        member.setId(key.longValue());
+        return member;
+    }
+
+    @Override
+    public Optional<Member> findById(Long id) {
+        List<Member> result = jdbcTemplate.query("select * from member where id = ?", memberRowMapper(), id);
+        return result.stream().findAny();
+    }
+
+    @Override
+    public Optional<Member> findByName(String name) {
+        List<Member> result = jdbcTemplate.query("select * from member where name = ?", memberRowMapper(), name);
+        return result.stream().findAny();
+    }
+
+    @Override
+    public List<Member> findAll() {
+        return jdbcTemplate.query("select * from member", memberRowMapper());
+    }
+
+    private RowMapper<Member> memberRowMapper() {
+        return new RowMapper<Member>() {
+            @Override
+            public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+                Member member = new Member();
+                member.setId(rs.getLong("id"));
+                member.setName(rs.getString("name"));
+                return member;
+            }
+        };
+    }
+}
+```
+
+
+
+- `jdbcInsert.withTableName("member").usingGeneratedKeyColumns("id");` 해당 코드를 보면 member 테이블에 id를 키값으로 사용하겠다라는걸 확인할 수 있다.
+- 해당 `jdbcInsert`를 통해 파라미터만 세팅해줘도 직접 query를 안짜도 JdbcTemplate이 insert쿼리를 제공해준다.
+
+**JdbcTemplate을 사용하도록 스프링 설정 변경**
+
+```java
+package hello.hellspring;
+
+import hello.hellspring.repository.JdbcMemberRepository;
+import hello.hellspring.repository.JdbcTemplateMemberRepository;
+import hello.hellspring.repository.MemberRepository;
+import hello.hellspring.repository.MemoryMemberRepository;
+import hello.hellspring.service.MemberService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import javax.sql.DataSource;
+
+@Configuration
+public class SpringConfig {
+
+    private DataSource dataSource;
+
+    @Autowired
+    public SpringConfig(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    @Bean
+    public MemberService memberService() {
+        return new MemberService(memberRepository());
+    }
+
+    @Bean
+    public MemberRepository memberRepository() {
+//        return new MemoryMemberRepository();
+//        return new JdbcMemberRepository(dataSource);
+        return new JdbcTemplateMemberRepository(dataSource);
+    }
+}
+```
+
+## JPA
+
+- JPA는 기존의 반복 코드는 물론이고, 기본적인 SQL도 JPA가 직접 만들어서 실행해준다.
+- JPA를 사용하면, SQL과 데이터 중심의 설계에서 객체 중심의 설계로 패러다임을 전환을 할 수 있다.
+- JPA를 사용하면 개발 생산성을 크게 높일 수 있다.
+
+build.gradle 파일에 JPA, h2 데이터베이스 관련 라이브러리 추가
+
+```
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '2.7.7'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'hello'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+//	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	implementation 'org.springframework.boot:spring-boot-stater-data-jpa'
+	runtimeOnly 'com.h2database:h2'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+}
+
+test {
+	useJUnitPlatform()
+}
+```
+
+- `spring-boot-starter-data-jpa`는 내부에 jdbc관련 라이브러리를 포함하고 있어 jdbc는 제거해도 된다.
+
+**스프링 부트에 JPA 설정 추가**
+`resources/application.properties`
+
+```
+spring.datasource.url=jdbc:h2:tcp://localhost/~/test
+spring.datasource.driver-class-name=org.h2.Driver
+spring.datasource.username=sa
+spring.jpa.show-sql=true
+spring.jpa.hibernate.ddl-auto=none
+```
+
+- `show-sql`: JPA가 생성하는 SQL을 출력한다.
+- `ddl-auto`: JPA는 테이블을 자동으로 생성하는 기능을 제공하는데 `none`을 사용하면 해당 기능을 끈다.
+  - `create`를 사용하면 엔티티 정보를 바탕으로 테이블도 직접 생성해준다.
+
+> 참고: JPA는 인터페이스이며 구현체로 Hibernate가 존재한다.
+대부분 Hibernate만 사용한다.
+>
+
+**JPA 엔티티 매핑**
+
+```java
+package hello.hellspring.domain;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
+public class Member {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+```
+
+- h2 콘솔에서 member 테이블을 생성할때 `id bigint generated by default as identity`이런 명령어를 사용해서 member 데이터를 삽입할때 id값을 세팅해주지 않아도 알아서 값이 세팅되었었는데, JPA엔티티에서는 `@GeneratedValue(strategy = GenerationType.IDENTITY)`를 명시해해줘서 위와 같이 사용할 수 있게 된다.
+
+**JPA 회원 리포지토리**
+
+```java
+package hello.hellspring.repository;
+
+import hello.hellspring.domain.Member;
+
+import javax.persistence.EntityManager;
+import java.util.List;
+import java.util.Optional;
+
+public class JpaMemberRepository implements MemberRepository {
+
+    private final EntityManager em;
+
+    public JpaMemberRepository(EntityManager em) {
+        this.em = em;
+    }
+
+    @Override
+    public Member save(Member member) {
+        em.persist(member);
+        return member;
+    }
+
+    @Override
+    public Optional<Member> findById(Long id) {
+        Member member = em.find(Member.class, id);
+        return Optional.ofNullable(member);
+    }
+
+    @Override
+    public Optional<Member> findByName(String name) {
+        List<Member> result = em.createQuery("select m from Member m where m.name = :name", Member.class)
+                .setParameter("name", name)
+                .getResultList();
+
+        return result.stream().findAny();
+    }
+
+    @Override
+    public List<Member> findAll() {
+        return em.createQuery("select m from Member m", Member.class)
+                .getResultList();
+    }
+    // 리스트를 조회할때 단건이 아니거나 PK기반이 아닌 나머지들은 jpql을 작성해 줘야 한다.
+}
+```
+
+- `build.gradle`파일에서 `implementation 'org.springframework.boot:spring-boot-stater-data-jpa'` 명령어를 통해서 라이브러리를 받으면 스프링 부트가 자동으로 `EntityManager`를 빈으로 등록해줘서 우리는 주입(Injection)받기만 하면된다.
+- 리스트를 조회할 때 단건이 아니거나 PK기반이 아닌 나머지들은 jpql을 작성해 줘야한다.
+  - `"select m from Member m where m.name = :name"`
+
+
+**서비스 계층에 트랜잭션 추가**
+
+```java
+import org.springframework.transaction.annotation.Transactional
+@Transactional
+public class MemberService {}
+```
+
+- `org.springframework.transaction.annotation.Transactional`을 사용하자.
+- 스프링은 해당 클래스의 메소드를 실행할때 트랜잭션을 시작하고, 메소드가 정상 종료되면 트랜잭션을 커밋한다. 만약 런타임 예외가 발생하면 롤백한다.
+- **JPA를 통한 모든 데이터 변경은 트랜잭션 안에서 실행해야한다.**
+
+**JPA를 사용하도록 스프링 설정 변경**
+
+```java
+package hello.hellspring;
+
+import hello.hellspring.repository.*;
+import hello.hellspring.service.MemberService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.sql.DataSource;
+
+@Configuration
+public class SpringConfig {
+
+    @PersistenceContext
+    private EntityManager em;
+
+    @Autowired
+    public SpringConfig(EntityManager em) {
+        this.em = em;
+    }
+
+    @Bean
+    public MemberService memberService() {
+        return new MemberService(memberRepository());
+    }
+
+    @Bean
+    public MemberRepository memberRepository() {
+//        return new MemoryMemberRepository();
+//        return new JdbcMemberRepository(dataSource);
+//        return new JdbcTemplateMemberRepository(dataSource);
+        return new JpaMemberRepository(em);
+    }
+}
+```
+
+- `@PersistenceContext`는 없어도 스프링이 처리해준다.
+  - 스프링에서는 영속성 관리를 위해 `EntityManager`가 존재한다.
+  - 스프링 컨테이너가 실행될 때 `EntityManager`를 빈으로 등록한다.
+  - 이때 `EntityManager`를 주입받을때 필요한게 `@PersistenceContext`이다. (생략 가능)
+
+**MemberServiceIntegrationTest실행**
+
+![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/5feaa597-0dcb-4456-828c-fa37e79ea499/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221231%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221231T043542Z&X-Amz-Expires=86400&X-Amz-Signature=323821a9d0cb1107fd1efcc9aab78dbfe5b84f097a01cb2a32ad34036494cf15&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+
+- 회원가입 테스트가 잘 돌아간게 확인된다.
+- Hibernate: select member0_.id as id1_0_, member0_.name as name2_0_ from member member0_ where member0_.name=?
+  - JPA 인터페이스의 구현체로 Hibernate가 사용이 되어 `findByName` 쿼리를 실행시킨거다.
+- Hibernate: insert into member (id, name) values (default, ?)
+  - 위와 같이 Hibernate가 사용되어 `save` 쿼리가 실행되고 id 에는 null 들어가는데 `@GeneratedValue(strategy = GenerationType.IDENTITY)`에 의해 id값이 자동으로 들어간다.
