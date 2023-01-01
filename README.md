@@ -447,6 +447,21 @@ public class MemoryMemberRepository implements MemberRepository {
 `Stream.filter(boolean)`: 인수로 받은 프리디케이트(boolean을 반환하는 함수)의 값에 의해 true를 만족하는 모든 요소를 `Stream`객체로 반환
 `Stream.findAny()`: `Stream`에서 가장 먼저 탐색되는 요소를 반환
 
+# Stream
+
+- java 8에서 추가된 `Stream`은 람다를 활용할 수 있는 기술 중 하나다.
+- `Stream`을 추가되기 전에는 배열 또는 컬렉션 인스턴스를 다루는 방법은 `for` 또는 `foreach`문을 사용하여 요소를 하나씩 다루는 방법이었는데, `Stream`을 추가되면서 배열 또는 컬렉션 인스턴스에 함수 여러 개를 조합해서 원하는 결과를 필터링 하고 가공한 결과를 얻을 수 있게 되었다.
+
+## Stream의 특징
+
+- 병렬처리(multi-threading)가 가능하다.
+- 내부 반복을 사용하여 코드의 양을 줄일 수 있다.
+
+# Optional
+
+- java 8에서는 `Optional<T>`클래스를 사용해 NPE(NullPointException)를 방지할 수 있다.
+- `Optional<T>`는 null이 올 수 있는 값을 감싸는 Wrapper 클래스이다.
+
 # 회원 리포지토리 테스트 케이스 작성
 
 개발한 기능을 실행해서 테스트 할 때 자바의 main메서드를 통해서 실행하거나, 웹 애플리케이션의 컨트롤러를 통해서 해당 기능을 실행한다. 이러한 방법은 준비하고 실행하는데 오래 걸리고, 반복 실행하기 어렵고 여러 테스트를 한번에 실행하기 어렵다는 단점이 있다. 자바는 JUnit이라는 프로임워크로 테스트를 실행해서 이러한 문제를 해결한다.
