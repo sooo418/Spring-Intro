@@ -2257,3 +2257,186 @@ public class SpringConfig {
   - JPA 인터페이스의 구현체로 Hibernate가 사용이 되어 `findByName` 쿼리를 실행시킨거다.
 - Hibernate: insert into member (id, name) values (default, ?)
   - 위와 같이 Hibernate가 사용되어 `save` 쿼리가 실행되고 id 에는 null 들어가는데 `@GeneratedValue(strategy = GenerationType.IDENTITY)`에 의해 id값이 자동으로 들어간다.
+
+# 스프링 데이터 JPA
+
+> 주의: *스프링 데이터 JPA는 JPA를 편리하게 사용하도록 도와주는 기술입니다. 따라서 JPA를 먼저 학습한 후에 스프링 데이터 JPA를 학습해야 합니다.*
+>
+
+**스프링 데이터 JPA 회원 리포지토리**
+
+```java
+package hello.hellspring.repository;
+
+import hello.hellspring.domain.Member;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+public interface SpringDataJpaMemberRepository extends JpaRepository<Member, Long>, MemberRepository {
+
+    @Override
+    Optional<Member> findByName(String name);
+}
+```
+
+- findByName이 실행되면 스프링 데이터 JPA가 JPQL로 select m from Member m where m.name = ?쿼리를 짜주고 해당 쿼리가 실행이 된다.
+
+**스프링 데이터 JPA 회원 리포지토리를 사용하도록 스프링 설정 변경**
+
+```java
+package hello.hellspring;
+
+import hello.hellspring.repository.MemberRepository;
+import hello.hellspring.service.MemberService;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class SpringConfig {
+
+    private final MemberRepository memberRepository;
+
+    public SpringConfig(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
+
+    @Bean
+    public MemberService memberService() {
+        return new MemberService(memberRepository);
+    }
+}
+```
+
+- 스프링 데이터 JPA가 `SpringDataJpaMemberRepository`를 스프링 빈으로 자동 등록해준다.
+  - JpaRepository를 상속받으면 자동으로 등록됨.
+
+
+**스프링 데이터 JPA 제공 클래스**
+
+![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/f7d6ecc3-167f-4dd2-99f7-2ea14f907815/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230102%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230102T135325Z&X-Amz-Expires=86400&X-Amz-Signature=820e99ed6fc838d9fb3198ccf9c181fbfcb1e98093399e9b76fd2b6eafdb878f&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+
+**스프링 데이터 JPA 제공 기능**
+
+- 인터페이스를 통한 기본적인 CRUD
+- `findByName()`, `findByEmail()`처럼 메서드 이름 만으로 조회 기능 제공
+- 페이징 기능 자동 제공
+
+> 참고: 실무에서는 JPA와 스프링 데이터 JPA를 기본으로 사용하고, 복잡한 동적 쿼리는 Querydsl이라는 라이브러리를 사용하면 된다. Querydsl을 사용하면 쿼리도 자바 코드로 안전하게 작성할 수 있고,  동적 쿼리도 편리하게 작성할 수 있다. 이 조합으로 해결하기 어려운 쿼리는 JPA가 제공하는 네이티브 쿼리를 사용하거나, 앞서 학습한 스프링 JdbcTemplate를 사용하면 된다.
+>
+
+# AOP
+
+## AOP가 필요한 상황
+
+- 모든 메소드의 호출 시간을 측정하고 싶다면?
+- 공통 관심 사항(cross-cutting concern) vs 핵심 관심 사항(core concern)
+- 회원가입 시간, 회원 조회 시간을 측정하고 싶다면?
+
+![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/2ae48c74-5f23-4edf-a49a-d206b18ba17d/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230102%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230102T135349Z&X-Amz-Expires=86400&X-Amz-Signature=f56dc217184446ff4291cf17ac6eb69c3a38c35447cb5b948ee32991a0441660&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+
+**MemberService 회원 가 시간 측정 추가**
+
+```java
+public Long join(Member member) {
+
+    long start = System.currentTimeMillis();
+
+    //같은 이름이 있는 중복 회원X
+    try {
+        validateDuplicateMember(member); //중복 회원 검증
+        memberRepository.save(member);
+        return member.getId();
+    } finally {
+        long finish = System.currentTimeMillis();
+        long timeMs = finish - start;
+        System.out.println("join = " + timeMs + "ms");
+    }
+}
+```
+
+*문제*
+
+- 회원가입, 회원 조회에 시간을 측정하는 기능은 핵심 관심 사항이 아니다
+- 시간을 측정하는 로직은 공통 관심 사항이다.
+- 시간을 측정하는 로직과 핵심 비즈니스의 로직이 섞여서 유지보수가 어렵다.
+- 시간을 측정하는 로직을 별도의 공통 로직으로 만들기 매우 어렵다.
+- 시간을 측정하는 로직을 변경할 때 모든 로직을 찾아가면서 변경해야 한다.
+
+## AOP 적용
+
+- AOP: Aspect Orientd programming
+- 공통 관심 사항(cross-cutting concern) vs 핵심 관심 사항(core concern) 분리
+
+![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/f60776e0-1cdf-46f7-a3b6-bb9515b1cc57/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230102%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230102T135408Z&X-Amz-Expires=86400&X-Amz-Signature=8ffff69aa6618a1ae254d88f1fcc4c0a8c7c30079d7b93285941f04fa964e42a&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+
+**시간 측정 AOP 등록**
+
+```java
+package hello.hellspring.aop;
+
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.springframework.stereotype.Component;
+
+@Aspect
+@Component
+public class TimeTraceAop {
+
+    @Around("execution(* hello.hellspring..*(..))")
+    public Object execute(ProceedingJoinPoint joinPoint) throws Throwable {
+        long start = System.currentTimeMillis();
+        System.out.println("START: " + joinPoint.toString());
+        try {
+            return joinPoint.proceed();
+        } finally {
+            long finish = System.currentTimeMillis();
+            long timeMs = finish - start;
+            System.out.println("END: " + joinPoint.toString() + " " + timeMs + "ms");
+        }
+    }
+}
+```
+
+- 여기서는 `@Component`를 사용하였지만 AOP는 `SpringConfig`에 직접 등록하여 이런 AOP가 등록되어 쓰이고 있구나 하고 명확하게 표시해주는게 좋다.
+
+*해결*
+
+- 회원가입, 회원 조회등 핵심 관심사항과 시간을 측정하는 공통 관심 사항을 분리한다.
+- 시간을 측정하는 로직을 별도의 공통 로직으로 만들었다.
+- 핵심 관심 사항을 깔끔하게 유지할 수 있다.
+- 변경이 필요하면 이 로직만 변경하면 된다.
+- 원하는 적용 대상을 선택할 수 있다.
+
+### 스프링의 AOP 동작 방식 설명
+
+**AOP 적용 전 의존 관계**
+
+![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/fbefb386-d0fd-4e6b-861b-a5fa4e1aee72/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230102%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230102T135425Z&X-Amz-Expires=86400&X-Amz-Signature=093416276ae05e8dbaf3b6ac906a8e320c3bd8322de6cae7d9e1eee18aa29961&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+
+**AOP 적용 후 의존 관계**
+
+![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/c34ac53a-cfdf-42b8-9142-85324c0ac254/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230102%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230102T135438Z&X-Amz-Expires=86400&X-Amz-Signature=8bb55e1acb2d758cfd3ab3dea007fe5ba235c0ca938e70d23e5c51ae31d5e3aa&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+
+- AOP를 적용하면 스프링 컨테이너 `MemberService`를 등록할때 ‘프록시’라하는 가짜 `MemberService`를 등록한다. `MemberController`는 ‘프록시’ 객체를 의존하고 있다가 `joinPoint.proceed()`가 실행되면 실제 `MemberService`가 호출된다.
+
+**AOP 적용 전 전체 그림**
+
+![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/53319097-de19-42ad-a9c6-545d46b7c0d6/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230102%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230102T135450Z&X-Amz-Expires=86400&X-Amz-Signature=579cffd5e3d47e6458b3d039ded0c09c363a07b0c25072f1693d21310da0d88b&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+
+**AOP 적용 후 전체 그림**
+
+![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/3b3e9544-4db1-42f1-9d08-4cbcfcbfa604/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230102%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230102T135501Z&X-Amz-Expires=86400&X-Amz-Signature=4031ffeea5c1c926fba13e2168c41356e72174b9a288c285e80f9175e2560140&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+
+*실제 Proxy 주입되는지 콘솔에서 확인하기*
+
+```java
+@Autowired
+public MemberController(MemberService memberService) {
+    this.memberService = memberService;
+    System.out.println("memberService = " + memberService.getClass());
+}
+```
+
+![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/af95d03d-4bbe-4c8f-9127-28a1560a600b/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230102%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230102T135514Z&X-Amz-Expires=86400&X-Amz-Signature=d6cbb7ca8ee3180e688e2752821889e40210c8440030ce38f5e9c81c94819033&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
