@@ -1838,7 +1838,7 @@ public class SpringConfig {
 
 *테스트 실행*
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/43375a5e-f097-4d0c-8032-4503498793e8/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221230%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221230T174535Z&X-Amz-Expires=86400&X-Amz-Signature=651a6d6603fd31ab42b6c6f814cfccdbc510516636e70b4e5e47eb8fbeddf989&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/43375a5e-f097-4d0c-8032-4503498793e8/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230104%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230104T140344Z&X-Amz-Expires=86400&X-Amz-Signature=daff197b8cb14093632ce776b8ed83b4ea4a41dbacd63b661e30c6b0da67c626&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
 
 - h2 콘솔에서 insert명령어로 입력한 spring과 spring2가 목록에 표시된다.
 
@@ -2417,7 +2417,7 @@ public class TimeTraceAop {
 
 **AOP 적용 후 의존 관계**
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/c34ac53a-cfdf-42b8-9142-85324c0ac254/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230102%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230102T135438Z&X-Amz-Expires=86400&X-Amz-Signature=8bb55e1acb2d758cfd3ab3dea007fe5ba235c0ca938e70d23e5c51ae31d5e3aa&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/c34ac53a-cfdf-42b8-9142-85324c0ac254/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230104%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230104T140239Z&X-Amz-Expires=86400&X-Amz-Signature=c15d0aef4786c0226264b55f0c7607e5fcb733d89fbb8ba070e7b5c44a92270d&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
 
 - AOP를 적용하면 스프링 컨테이너 `MemberService`를 등록할때 ‘프록시’라하는 가짜 `MemberService`를 등록한다. `MemberController`는 ‘프록시’ 객체를 의존하고 있다가 `joinPoint.proceed()`가 실행되면 실제 `MemberService`가 호출된다.
 
