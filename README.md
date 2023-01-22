@@ -2,9 +2,9 @@
 
 spring boot를 사용할건데 [start.spring.io](http://start.spring.io) 사이트를 통해 프로젝트를 생성하면 편하게 프로젝트를 생성할 수 있다.
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/cfdbc24a-a823-42a0-bb7d-b16c0472afc7/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221225%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221225T114556Z&X-Amz-Expires=86400&X-Amz-Signature=a8055aada802c1bb222044a0150b883aa8aa0fdfb8cf3c577cea34cc1552230e&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img.png)
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/475c2825-c8dc-4d29-9d65-e1f0f19dffa3/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221225%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221225T114616Z&X-Amz-Expires=86400&X-Amz-Signature=21b2416ae0817f3359e5ced7412d970643d23c24b24744afae9f068f8a6dc647&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_1.png)
 
 프로젝트 구성을 보면 src/main 폴더와 src/test 폴더가 나누어져있다.
 
@@ -71,37 +71,37 @@ java의 실행 메소드인 main메소드가 있고 안에 해당 파일의 클�
 
 해당 파일을 실행시키면 콘솔에
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/cb42a852-fd7e-4f40-9220-36adc3431c34/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221225%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221225T114715Z&X-Amz-Expires=86400&X-Amz-Signature=2ede4ef2fb1c4f5c587d283b027d8b2b86a69d5f22b103afe64ec134a0a6493e&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_2.png)
 
 위와 같이 로그가 찍힌다.
 
 그리고 localhost:8080에 접속해보면
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/2870805d-a51d-4c43-a319-9dc61f715a9f/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221225%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221225T114729Z&X-Amz-Expires=86400&X-Amz-Signature=2023a77633cb131d052dd644ee0852625b022c9d3ddce4fd1ae532b71e90126d&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_3.png)
 
 위와 같이 표시가 되면 성공한것이다.
 
 - 스프링 부트는 톰캣을 내장하고 있어 따로 설정해주지 않아도 자체적으로 톰캣서버를 실행시켜준다.
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/dd750272-f806-4ef8-9995-cc10576f178f/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221225%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221225T114756Z&X-Amz-Expires=86400&X-Amz-Signature=38040ad70f6a64db11d1980a91bd24124778d90904b51a7b3151ad8246c2b688&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_4.png)
 
 - **인텔리제이의 설정에 가서 build tool에서 gradle에 가면 빨간색으로 마크한 부분에 gradle로 설정이 되어있는걸 IntelliJ IDEA로 변경해주면 서버를 띄울때 gradle을 통하지 않고 인텔리제이 툴에서 바로 자바를 실행시켜 훨씬 빨리 서버를 실행시킬 수 있다.**
 
 # 라이브러리 살펴보기
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/cf787a52-bb05-43be-be6e-ef36f1b00a3f/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221225%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221225T114822Z&X-Amz-Expires=86400&X-Amz-Signature=c8555b37162e44763c32d7965123ccef2da71c8159dd9fa9de2e2d7a01b70f8e&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_5.png)
 
 - 프로젝트의 라이브러리를 살펴보면 생각지도 못하게 엄청난 양의 라이브러리가 존재할 것이다.
 - gradle이나 maven 같은 빌드 툴들은 의존 관계를 다 관리를 해준다.
     - spring-starter-web 라이브러리만 땡겨도 필요한 spring-starter-web 에 관련된 라이브러리 들까지 땡겨오는것이다.
 
-![표시해놓은 gradle버튼을 누르면 오른쪽에 gradle정보가 표시가 된다.](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/ba8404e1-7e19-43b4-83af-da095033684b/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221225%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221225T114858Z&X-Amz-Expires=86400&X-Amz-Signature=d760ff6218fb395ca53cef0f10c18e03adc1cebf4eb55f0189458258b0df762f&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_6.png)
 
-표시해놓은 gradle버튼을 누르면 오른쪽에 gradle정보가 표시가 된다.
+- 표시해놓은 gradle버튼을 누르면 오른쪽에 gradle정보가 표시가 된다.
 
-![기본적으로 spring-boot-starter-thymeleaf와 spring-boot-starter-web 라이브러리가 있고 해당 라이브러리들과 관련된 라이브러리들까지 땡겨오는걸 확인할 수 있다.](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/4b29b317-d224-4db7-b39d-e27ba4f2afeb/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221225%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221225T114931Z&X-Amz-Expires=86400&X-Amz-Signature=0fdaf227854826095f0c2bb3afe8813b06866d2e783d9225c1a2a48fe59ffec9&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_7.png)
 
-기본적으로 spring-boot-starter-thymeleaf와 spring-boot-starter-web 라이브러리가 있고 해당 라이브러리들과 관련된 라이브러리들까지 땡겨오는걸 확인할 수 있다.
+- 기본적으로 spring-boot-starter-thymeleaf와 spring-boot-starter-web 라이브러리가 있고 해당 라이브러리들과 관련된 라이브러리들까지 땡겨오는걸 확인할 수 있다.
 
 ### 스프링 부트 라이브러리
 
@@ -153,7 +153,7 @@ Hello
 
 ## 동작 환경 그림
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/998d1801-b49d-404f-a90f-7c9bc0215e28/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221225%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221225T114958Z&X-Amz-Expires=86400&X-Amz-Signature=5c8274ba87d267f26ba2e32cf78060e7651806955cefa3751a192e86bc05d55a&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_8.png)
 
 - 컨트롤러에서 리턴 값으로 문자를 반환하면 뷰 리졸버(`viewResolver`)가 화면을 찾아서 처리한다.
     - 스프링 부트 템플릿엔진 기본 viewName 매핑
@@ -203,11 +203,11 @@ Hello
 
 - `http://localhost:8080/hello-static.html`
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/13105a63-98e6-40cf-b063-d503a5288d40/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221225%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221225T115018Z&X-Amz-Expires=86400&X-Amz-Signature=784f4138dd18f375df5ec3765fa95c971f50ac0ac00f61375e7fb09534f8f83a&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_9.png)
 
 *정적 컨텐츠 이미지*
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/eeaec0b7-fab3-4a13-89c9-1130e713664c/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221225%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221225T115030Z&X-Amz-Expires=86400&X-Amz-Signature=b6ed570bc29670de193c67238b2882735ece2b5d8061394828e2e8b90841334d&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_10.png)
 # MVC와 템플릿 엔진
 
 - MVC: Model, View, Controller
@@ -244,7 +244,7 @@ public class HelloController {
 
 - [`http://localhost:8080/hello-mvc?name=spring`](http://localhost:8080/hello-mvc?name=spring)
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/b1a6b59c-2e09-4c28-b8e2-c6ec77847b18/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221226%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221226T134006Z&X-Amz-Expires=86400&X-Amz-Signature=03077826a7c52bb7a64522a30ac406e2e0837e2ae3e41cc33f760c92a553243a&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_11.png)
 
 - ${name}에 spring이 들어간걸 확인할 수 있다.
 
@@ -309,7 +309,7 @@ public class HelloController {
 
 - [`http://localhost:8080/hello-api?name=spring`](http://localhost:8080/hello-api?name=spring)
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/55544f35-1f76-43ab-9cda-57807fcab03f/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221226%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221226T134120Z&X-Amz-Expires=86400&X-Amz-Signature=c7156ca3b8785aa2252fe57238d1fa1054dfe813d7e4f870a63cd608af2a5a13&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_12.png)
 
 - `@ResponseBody`를 사용
   - HTTP의 BODY에 문자 내용을 직접 반환
@@ -338,7 +338,7 @@ public class HelloController {
 - 기능: 회원 등록, 조회
 - 아직 데이터 저장소가 선정되지 않음(가상의 시나리오)
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/30336b9c-ada7-474f-a7ba-858e0d4f54c5/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221230%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221230T151251Z&X-Amz-Expires=86400&X-Amz-Signature=0e68719cf9d338021f3ab43f46a48993d31d1cfb9444e3546d2f649ea177f1d4&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_13.png)
 
 - 컨트롤러: 웹 MVC의 컨트롤러 역할
 - 서비스: 핵심 비즈니스 로직 구현
@@ -347,7 +347,7 @@ public class HelloController {
 
 *클래스 의존관계*
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/58ac57f2-ace1-4193-af5b-b87f3643153d/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221230%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221230T151301Z&X-Amz-Expires=86400&X-Amz-Signature=efd99da275f0c4d38e763c412e49fcaa84ffb2f0534a4c01c1bbcbbdefff2e8b&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_14.png)
 
 - 아직 데이터 저장소가 선정되지 않아서, 우선 인터페이스로 구현 클래스를 변경할 수 있도록 설계
 - 데이터 저장소는 RDB, NoSQL 등등 다양한 저장소를 고민중인 상황으로 가정
@@ -565,14 +565,13 @@ public void save() {
 
 *실행*
 
-![실행을 하면 그냥 아무 출력된 로그없이 위와 같이 초록색으로 체크 모양이 표시됨.](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/690133d2-3853-4dfc-b973-d5c0155a11a8/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221227%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221227T115237Z&X-Amz-Expires=86400&X-Amz-Signature=67851e65215d6f08d99702857faddc225bedbd6322299960e27c2331a1506c21&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_15.png)
 
-실행을 하면 그냥 아무 출력된 로그없이 위와 같이 초록색으로 체크 모양이 표시됨.
+- 실행을 하면 그냥 아무 출력된 로그없이 위와 같이 초록색으로 체크 모양이 표시됨.
 
 *실행 - 인자가 서로 다를 경우*
 
-![`Assertions.*assertEquals*(null, member);`
-실행시 X 모양이 표시가 되고 에러로그가 출력된다. 필요(expected) 값이 null이고 실제(actual)값이 member의 객체값이 표시된다.](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/6a5bdded-1b72-4f40-900c-2672f1251a28/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221227%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221227T115255Z&X-Amz-Expires=86400&X-Amz-Signature=22037100bda4ce985ce815badf6960839bdb02104749a0e99b2ec724297f33d3&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_16.png)
 
 `Assertions.assertEquals(null, member);`
 실행시 X 모양이 표시가 되고 에러로그가 출력된다. 필요(expected) 값이 null이고 실제(actual)값이 member의 객체값이 표시된다.
@@ -619,13 +618,11 @@ public void findByName() {
 
 *실행*
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/6427e5b6-cb7d-4812-a374-0b62fdee1363/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221227%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221227T115314Z&X-Amz-Expires=86400&X-Amz-Signature=9a9b04e318e6fa83183fe25ecc0b497751acb0c0647e92d6c1e9fab4902c9c96&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_17.png)
 
 *실행 - 인자가 서로 다를 경우*
 
-![*`assertThat*(result).isEqualTo(member2);`
-필요값에 member1의 객체값이 표시,
-실제값에 member2의 객체값이 표시된다.](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/34a4f220-0dac-4758-8b1f-21dda3513644/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221227%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221227T115330Z&X-Amz-Expires=86400&X-Amz-Signature=929b8d788f979eefd3d900b82b4f36e5a82b23045c8733593a3361a37a45d2df&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_18.png)
 
 `assertThat(result).isEqualTo(member2);`
 필요값에 member1의 객체값이 표시,
@@ -652,19 +649,18 @@ public void findAll() {
 
 *실행*
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/0f4e9ce1-2df1-4d31-9917-fddbf259f129/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221227%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221227T115354Z&X-Amz-Expires=86400&X-Amz-Signature=3bb0bb684c7d19adfe37cc88d6e9594feff4549f06bac7454941d3dac9f5ab4b&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_19.png)
 
 *실행 - 인자가 서로 다를 경우*
 
-![*`assertThat*(result.size()).isEqualTo(3);`
-위와 같이 필요값과 실제값이 표시된다.](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/e9459388-aa47-4f4a-9200-090b49a0ecb2/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221227%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221227T115406Z&X-Amz-Expires=86400&X-Amz-Signature=b75c7ed4efecc86ade8b54d9d33bc34a6599e10c69d0fdda42c2bcf7c067a323&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_20.png)
 
 `assertThat(result.size()).isEqualTo(3);`
 위와 같이 필요값과 실제값이 표시된다.
 
 *테스트 클래스를 한번에 실행*
 
-![빨갛게 표시된 부분을 클릭하면 정의되어 있는 테스트들이 한번에 모두 실행이 된다.](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/1963393e-6a9e-4c91-ab61-234ea6d739c6/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221227%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221227T115420Z&X-Amz-Expires=86400&X-Amz-Signature=feca427d371fb07f8319e2710c1a0ecf53ef6849665c2b1f31b3d772dd9f7a56&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_21.png)
 
 빨갛게 표시된 부분을 클릭하면 정의되어 있는 테스트들이 한번에 모두 실행이 된다.
 
@@ -730,8 +726,7 @@ class MemoryMemberRepositoryTest {
 
 *실행*
 
-![findAll()이 먼저 실행되고 findByName()이 실패한걸 확인 할 수 있다.
-테스트 소스를 한번에 실행 시 순서보장이 안되기 때문에 MemoryMemberRepository의 로컬변수 store에는 findAll() 함수에서 member 객체가 두 개 들어가고 findByName() 함수에서 또 name값이 같은 member 객체가 두 개가 들어가서 findByName에서 두 객체를 비교할때 result에 반환된 객체가 findAll() 함수에서 입력한 member객체이기에 실패하는 것을 확인할 수 있다.](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/f4a216c3-9912-4e9d-910c-99ec31ff37d2/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221228%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221228T142219Z&X-Amz-Expires=86400&X-Amz-Signature=d5e0caef418785aa3a5edcba2820f9eb2ceff0b559ade0f28783e7f82304bf4d&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_22.png)
 
 findAll()이 먼저 실행되고 findByName()이 실패한걸 확인 할 수 있다.
 테스트 소스를 한번에 실행 시 순서보장이 안되기 때문에 MemoryMemberRepository의 로컬변수 store에는 findAll() 함수에서 member 객체가 두 개 들어가고 findByName() 함수에서 또 name값이 같은 member 객체가 두 개가 들어가서 findByName에서 두 객체를 비교할때 result에 반환된 객체가 findAll() 함수에서 입력한 member객체이기에 실패하는 것을 확인할 수 있다.
@@ -762,9 +757,9 @@ public void afterEach() {
 
 *실행*
 
-![모두 정상적으로 실행되는걸 확인할 수 있다.](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/09a0a8aa-c2cb-4aac-a705-a1d83df87193/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221227%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221227T115454Z&X-Amz-Expires=86400&X-Amz-Signature=0b4e42e6f1a98c0185975dce22e58f0a4418a0314ab2919506a16ea6fff99cad&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_23.png)
 
-모두 정상적으로 실행되는걸 확인할 수 있다.
+- 모두 정상적으로 실행되는걸 확인할 수 있다.
 
 ### 테스트 주도 개발 (Test Driven Development의 약자 TDD)
 
@@ -918,15 +913,15 @@ public void 중복_회원_예외() {
 - `assertThrows(IllegalStateException.class, () -> memberService.join(member2));`
   - `() -> memberService.join(member)` 해당 로직을 실행시키면 예외가 발생하는데 `IllegalStateException.class` 해당 예외가 발생하는지 비교해주는 함수이다.
 
-실*행*
+*실행*
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/19751ddb-a715-417b-800a-c5986ec7f87b/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221228%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221228T160027Z&X-Amz-Expires=86400&X-Amz-Signature=3ffd76f620642a6b438b4f114a284fac6a14835b418c78ff73835feded15ed8c&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_24.png)
 
 - `assertThrows(NullPointerException.class, () -> memberService.join(member2));`으로 변경 시
 
 *실행*
 
-![테스트가 실패하는게 확인됨](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/fa3655ea-889b-46e1-851e-37c7a75eeff9/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221228%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221228T160042Z&X-Amz-Expires=86400&X-Amz-Signature=da353ec3d78c6daa16e1b84f2bedbb725e7e564ccfd5f11f5a28eac78231c2c7&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_25.png)
 
 테스트가 실패하는게 확인됨
 
@@ -1021,9 +1016,9 @@ class MemberServiceTest {
 
 *`회원가입`에서 함수에서 객체의 `name`을 hello → spring 으로 변경 후 전체 테스트 실행*
 
-![`중복_회원_예외()`함수에서 입력한 객체의 `name`값이 “spring”이므로 테스트 실행 중 예외가 발생한다.](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/d2f707ef-1657-4c1a-86fe-090fb7fb19a4/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221228%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221228T160203Z&X-Amz-Expires=86400&X-Amz-Signature=632cfa1ac5ba41f03818d0f15bc9f0c9d225a800ab5df1f6a612f51fc7c3ca2a&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_26.png)
 
-`중복_회원_예외()`함수에서 입력한 객체의 `name`값이 “spring”이므로 테스트 실행 중 예외가 발생한다.
+- `중복_회원_예외()`함수에서 입력한 객체의 `name`값이 “spring”이므로 테스트 실행 중 예외가 발생한다.
 
 *해결방법*
 
@@ -1099,7 +1094,7 @@ class MemberServiceTest {
 
 *실행*
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/9fefedb2-02c7-4b3e-8b21-81d0ae9d71e8/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221228%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221228T160229Z&X-Amz-Expires=86400&X-Amz-Signature=b689357bbaf40aae9ff8ad573404e3549bb9e1f0409cde5e0e33664882e7aca9&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_27.png)
 
 ## DI(의존성 주입)
 
@@ -1202,7 +1197,7 @@ Consider defining a bean of type 'hello.hellspring.service.MemberService' in you
 
 *memberService가 스프링 빈으로 등록되어 있지 않다.*
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/9ce4d3bd-b104-47de-bddd-c0dfd95e1580/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221229%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221229T131223Z&X-Amz-Expires=86400&X-Amz-Signature=38a102e4433dac5394439b086f47853eabb7662f408e14ed28c4852ae064f437&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_28.png)
 
 > 참고: MemberController는 스프링이 제공하는 컨트롤러여서 스프링 빈으로 자동 등록된다.
 `@Controller`가 있으면 자동 등록됨
@@ -1250,7 +1245,7 @@ public class MemoryMemberRepository implements MemberRepository {}
 
 *스프링 빈 등록 이미지*
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/dc57e374-5615-4d40-b715-637ddf38737f/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221229%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221229T131254Z&X-Amz-Expires=86400&X-Amz-Signature=7303391e4fc4a7132427e1a1e2f4e78afb8b4e3953a4119e0b17c6e7eaa6315d&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_29.png)
 
 - `MemberService`와 `MemberRepository`가 스프링 컨테이너에서 스프링 빈으로 등록되었다.
 
@@ -1390,7 +1385,7 @@ public class HomeController {
 
 *실행*  [`http://localhost:8080/`](http://localhost:8080/)
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/4b76f86d-893d-4d79-9ab3-f0f077288fbf/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221229%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221229T131327Z&X-Amz-Expires=86400&X-Amz-Signature=3e063f31e5b20ba9aa5bddd00aacdeced0a08bb6e8c5a5f9c4448cf302cee658&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_30.png)
 
 - 이전에는 index.html이 존재하면 welcome 페이지라서 `localhost:8080`요청시 index.html 화면이 리턴된다고 한적이 있는데 home.html 화면이 리턴된 이유는 정적 컨텐츠(static)
   즉, index.html화면은 관련 컨트롤러가 있는지 먼저 체크하고 없을 경우에 리턴이 된다.
@@ -1506,11 +1501,11 @@ public String list(Model model) {
 
 *실행*
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/c7a25a07-ccca-4d7a-8f54-f221f21bdd57/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221229%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221229T131350Z&X-Amz-Expires=86400&X-Amz-Signature=041181a5e38e9b166202b089d2f70e87faa691afb1b3bbfa125485be76a39a1a&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_31.png)
 
 - 회원 가입 화면에서 spring1과 spring2를 등록한다.
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/d1d16bb1-9e6b-4ae2-89d7-199cb8f93c24/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221229%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221229T131400Z&X-Amz-Expires=86400&X-Amz-Signature=bfd7535aa8fc9574a6f2d5f29d03cff7f467853786ab40b80f1206a41d88bde7&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_32.png)
 
 - 회원 목록 화면에서 등록 되어있는 회원이 표시된다.
 
@@ -1570,22 +1565,22 @@ public String list(Model model) {
 - zip 파일을 다운받아 압축을 풀고 bin 디렉토리 아래의 h2.bat 또는 h2w.bat을 실행하면 H2 데이터베이스가 서버 모드로 실행된다.
   - Unix 계열은 h2.sh를 실행한다.
 
-![화면이 뜨고 나서 잘 작동하지 않을때 앞의 192.xxx.x.xxx:8082~~ 이런식으로 url이 있을텐데 192.xxx.x.xxx를 localhost로 변경해주면 잘 작동한다.](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/84e55c76-d1a4-4eb6-8691-e7793ba7e836/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221230%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221230T174211Z&X-Amz-Expires=86400&X-Amz-Signature=ea39ccbca33e08594e85cd8e36e68b78eb21bc1c0fe0b879289f1ff2f51707ec&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_33.png)
 
-화면이 뜨고 나서 잘 작동하지 않을때 앞의 192.xxx.x.xxx:8082~~ 이런식으로 url이 있을텐데 192.xxx.x.xxx를 localhost로 변경해주면 잘 작동한다.
+- 화면이 뜨고 나서 잘 작동하지 않을때 앞의 192.xxx.x.xxx:8082~~ 이런식으로 url이 있을텐데 192.xxx.x.xxx를 localhost로 변경해주면 잘 작동한다.
 
 - JDBC URL 칸을 보면 `jdbc:h2:~/test`로 기본값이 들어가있다.
   - 해당 경로는 내 홈의 test파일 경로를 뜻한다.
 
 이대로 연결 버튼을 누르면 DB가 만들어진다.
 
-![왼쪽 상단에 빨간 버튼을 누르면 연결을 해제할 수 있다.](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/cf1866a1-250a-4955-8200-adab55dffeab/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221230%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221230T174303Z&X-Amz-Expires=86400&X-Amz-Signature=002ff704f5f0a1d93c6219265c2a18004cd817d452072e9304aea5ddd60903a7&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_34.png)
 
 왼쪽 상단에 빨간 버튼을 누르면 연결을 해제할 수 있다.
 
 - 여기서 확인해야 할게 자기 홈(C:\Users\name)에 test.mv.db라는 파일이 있어야 한다.
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/f564d935-fbb9-4a32-99f9-aa2d49465d58/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221230%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221230T174346Z&X-Amz-Expires=86400&X-Amz-Signature=ebe7158567c111c038af5cc082290465280a11be3b12c466b8baa02a811baaa9&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_35.png)
 
 - 확인이 되었으면 이후부터는 파일로 접근을 하게되면 동시에 애플리케이션이랑 웹 콘솔이 같이 접근이 안되거나 충돌이 날 수 있어서 JDBC URL에 `jdbc:h2:~/test`이 아니라 `jdbc:h2:tcp://localhost/~/test`로 접근을 해야한다.
   - `jdbc:h2:tcp://localhost/~/test`이렇게 접근을 하면 파일에 직접 접근하는게 아니라 소캣을 통해서 접근을 해서 여러 곳에서 접근이 가능하게 된다.
@@ -1610,7 +1605,7 @@ create table member
 
 - `SELECT * FROM MEMBER` 실행 시
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/e5b0580d-f2d8-4370-be84-75f5bfdfcce0/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221230%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221230T174439Z&X-Amz-Expires=86400&X-Amz-Signature=248f88c9d2f864440f8e704be1add2ee7e623f97c7476d35431441d79453222d&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_36.png)
 
 자동으로 id 값이 저장된걸 확인할 수 있다.
 
@@ -1627,7 +1622,7 @@ runtimeOnly 'com.h2database:h2'
 
 - dependencies에 소스 추가 후
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/ae0cccab-57e2-41ba-9c8c-1f9fdd01a55b/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221230%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221230T174455Z&X-Amz-Expires=86400&X-Amz-Signature=a155df022d895d61de549cb8ee77b11e2bb03ec2b9acce1249f5cacf3153d165&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_37.png)
 
 - 빨갛게 표시한 코끼리 버튼이 화면에 표시되고 버튼을 누르면 빌드를 시작한다.
 
@@ -1838,17 +1833,17 @@ public class SpringConfig {
 
 *테스트 실행*
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/43375a5e-f097-4d0c-8032-4503498793e8/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230104%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230104T140344Z&X-Amz-Expires=86400&X-Amz-Signature=daff197b8cb14093632ce776b8ed83b4ea4a41dbacd63b661e30c6b0da67c626&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_38.png)
 
 - h2 콘솔에서 insert명령어로 입력한 spring과 spring2가 목록에 표시된다.
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/0f5d70e8-4431-4efb-8899-6c222b76c07d/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221230%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221230T174630Z&X-Amz-Expires=86400&X-Amz-Signature=a73b2fe5eaa736b94d754ce7bd12ad30ca263a9948e034e146001b5159a5b7c5&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_39.png)
 
 - 화면에서 jpa를 등록한다.
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/bf072e71-567e-4487-a316-1d60f7cc805b/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221230%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221230T174545Z&X-Amz-Expires=86400&X-Amz-Signature=d0d47371a09d225038f62f14400f9cdac9852fcee239418d81b78bab96a14867&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_40.png)
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/ab2564a7-a4f2-43bb-83fc-2ee2b14b56a8/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221230%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221230T174548Z&X-Amz-Expires=86400&X-Amz-Signature=c01d54f618bb5f0b1ab840510631a46a8faf12474dd6da8b51c046c91b29a3f8&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_41.png)
 
 회원목록 화면이랑 h2 콘솔에서 jpa가 저장된걸 확인할 수 있다.
 ## 스프링 통합 테스트
@@ -2250,7 +2245,7 @@ public class SpringConfig {
 
 **MemberServiceIntegrationTest실행**
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/5feaa597-0dcb-4456-828c-fa37e79ea499/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221231%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221231T043542Z&X-Amz-Expires=86400&X-Amz-Signature=323821a9d0cb1107fd1efcc9aab78dbfe5b84f097a01cb2a32ad34036494cf15&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_42.png)
 
 - 회원가입 테스트가 잘 돌아간게 확인된다.
 - Hibernate: select member0_.id as id1_0_, member0_.name as name2_0_ from member member0_ where member0_.name=?
@@ -2314,7 +2309,7 @@ public class SpringConfig {
 
 **스프링 데이터 JPA 제공 클래스**
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/f7d6ecc3-167f-4dd2-99f7-2ea14f907815/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230102%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230102T135325Z&X-Amz-Expires=86400&X-Amz-Signature=820e99ed6fc838d9fb3198ccf9c181fbfcb1e98093399e9b76fd2b6eafdb878f&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_43.png)
 
 **스프링 데이터 JPA 제공 기능**
 
@@ -2333,7 +2328,7 @@ public class SpringConfig {
 - 공통 관심 사항(cross-cutting concern) vs 핵심 관심 사항(core concern)
 - 회원가입 시간, 회원 조회 시간을 측정하고 싶다면?
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/2ae48c74-5f23-4edf-a49a-d206b18ba17d/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230102%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230102T135349Z&X-Amz-Expires=86400&X-Amz-Signature=f56dc217184446ff4291cf17ac6eb69c3a38c35447cb5b948ee32991a0441660&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_44.png)
 
 **MemberService 회원 가 시간 측정 추가**
 
@@ -2368,7 +2363,7 @@ public Long join(Member member) {
 - AOP: Aspect Orientd programming
 - 공통 관심 사항(cross-cutting concern) vs 핵심 관심 사항(core concern) 분리
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/f60776e0-1cdf-46f7-a3b6-bb9515b1cc57/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230102%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230102T135408Z&X-Amz-Expires=86400&X-Amz-Signature=8ffff69aa6618a1ae254d88f1fcc4c0a8c7c30079d7b93285941f04fa964e42a&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_45.png)
 
 **시간 측정 AOP 등록**
 
@@ -2413,21 +2408,21 @@ public class TimeTraceAop {
 
 **AOP 적용 전 의존 관계**
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/fbefb386-d0fd-4e6b-861b-a5fa4e1aee72/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230102%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230102T135425Z&X-Amz-Expires=86400&X-Amz-Signature=093416276ae05e8dbaf3b6ac906a8e320c3bd8322de6cae7d9e1eee18aa29961&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_46.png)
 
 **AOP 적용 후 의존 관계**
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/c34ac53a-cfdf-42b8-9142-85324c0ac254/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230104%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230104T140239Z&X-Amz-Expires=86400&X-Amz-Signature=c15d0aef4786c0226264b55f0c7607e5fcb733d89fbb8ba070e7b5c44a92270d&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_47.png)
 
 - AOP를 적용하면 스프링 컨테이너 `MemberService`를 등록할때 ‘프록시’라하는 가짜 `MemberService`를 등록한다. `MemberController`는 ‘프록시’ 객체를 의존하고 있다가 `joinPoint.proceed()`가 실행되면 실제 `MemberService`가 호출된다.
 
 **AOP 적용 전 전체 그림**
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/53319097-de19-42ad-a9c6-545d46b7c0d6/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230102%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230102T135450Z&X-Amz-Expires=86400&X-Amz-Signature=579cffd5e3d47e6458b3d039ded0c09c363a07b0c25072f1693d21310da0d88b&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_48.png)
 
 **AOP 적용 후 전체 그림**
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/3b3e9544-4db1-42f1-9d08-4cbcfcbfa604/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230102%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230102T135501Z&X-Amz-Expires=86400&X-Amz-Signature=4031ffeea5c1c926fba13e2168c41356e72174b9a288c285e80f9175e2560140&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_49.png)
 
 *실제 Proxy 주입되는지 콘솔에서 확인하기*
 
@@ -2439,4 +2434,4 @@ public MemberController(MemberService memberService) {
 }
 ```
 
-![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/af95d03d-4bbe-4c8f-9127-28a1560a600b/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230102%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230102T135514Z&X-Amz-Expires=86400&X-Amz-Signature=d6cbb7ca8ee3180e688e2752821889e40210c8440030ce38f5e9c81c94819033&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![](img/img_50.png)
